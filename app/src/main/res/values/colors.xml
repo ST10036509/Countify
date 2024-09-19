@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="button_green">#9cf994</color>
     <color name="button_gray">#4d4d4d</color>
-    <color name="hint_text_gray">#999999</color>
+    <color name="hint_text_grey">#999999</color>
+    <color name="background_colour_light_grey">#f2f2f7</color>
     <color name="red">#FF5C5C</color>
 </resources>
