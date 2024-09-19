@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Login Wrapper -->
     <LinearLayout
         android:id="@+id/mainLoginWrapper"
         android:layout_width="wrap_content"
@@ -16,14 +17,11 @@
         android:orientation="vertical"
         android:gravity="center">
 
+        <!-- Logo Wrapper -->
         <LinearLayout
             android:id="@+id/mainLogoContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             android:gravity="center">
 
@@ -51,11 +49,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </LinearLayout>
 
 
-
+        <!-- Login Form Container -->
         <LinearLayout
             android:id="@+id/linearLayoutContainer"
             android:layout_width="300dp"
@@ -72,13 +69,17 @@
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:fontFamily="@font/inter_regular"
-                android:textSize="14sp"
-                android:inputType="textEmailAddress"
                 android:layout_marginTop="32dp"
+                android:backgroundTint="@color/button_gray"
+                android:drawableStart="@drawable/mail"
                 android:drawablePadding="8dp"
-                android:backgroundTint="@android:color/darker_gray" />
+                android:fontFamily="@font/inter_regular"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="10dp"
+                android:paddingEnd="8dp"
+                android:textSize="16sp"
+                android:textColor="@color/hint_text_gray" />
 
             <!-- Password EditText -->
             <EditText
@@ -88,28 +89,44 @@
                 android:hint="@string/password"
                 android:fontFamily="@font/inter_regular"
                 android:inputType="textPassword"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:layout_marginTop="16dp"
+                android:drawableStart="@drawable/lock_icon"
                 android:drawablePadding="8dp"
-                android:backgroundTint="@android:color/darker_gray" />
+                android:backgroundTint="@color/button_gray"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:autofillHints="password"/>
 
             <!-- Login Button -->
-            <Button
-                android:id="@+id/loginButton"
+            <FrameLayout
+                android:id="@+id/loginButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:text="@string/login"
-                android:textSize="27sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:fontFamily="@font/segoe_ui_bold"
-                android:background="@drawable/rounded_button_background"
-                android:backgroundTint="@color/button_green"
-                android:layout_marginTop="40dp" />
+                android:layout_marginTop="40dp">
 
-            <!-- Social Media Login Options -->
+                <!-- Button Background (View or ImageView for custom drawable) -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rounded_button_background"
+                    android:backgroundTint="@color/button_green" />
+
+                <!-- Text on top of the Button Background -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/login"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/segoe_ui_bold"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- SSO Login Options -->
             <LinearLayout
-                android:id="@+id/socialMediaLayout"
+                android:id="@+id/ssoButton"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:orientation="horizontal"
@@ -146,7 +163,7 @@
                     android:src="@drawable/apple_logo" />
             </LinearLayout>
 
-            <!-- Create Account Link -->
+            <!-- Register Account Link -->
             <TextView
                 android:id="@+id/createAccountTextView"
                 android:layout_width="wrap_content"
@@ -154,16 +171,12 @@
                 android:text="@string/register_prompt"
                 android:textAlignment="center"
                 android:textColor="@color/button_gray"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/segoe_ui"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="16dp" />
         </LinearLayout>
-
     </LinearLayout>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
