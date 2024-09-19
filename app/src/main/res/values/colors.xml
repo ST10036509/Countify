@@ -12,4 +12,5 @@
     <color name="hint_text_grey">#999999</color>
     <color name="background_colour_light_grey">#f2f2f7</color>
     <color name="red">#FF5C5C</color>
+    <color name="fab_blue">#272B3C</color>
 </resources>

@@ -3,15 +3,20 @@
 
     <!-- Global -->
 
-    <!-- Login & Register Page -->
+    <!-- Login, SSO, & Register Page -->
     <string name="fullname">FULL NAME</string>
     <string name="email">EMAIL</string>
     <string name="password">PASSWORD</string>
     <string name="confirm_password">CONFIRM PASSWORD</string>
     <string name="login">LOGIN</string>
     <string name="register">REGISTER</string>
+    <string name="github">GitHub</string>
+    <string name="google">Google</string>
+    <string name="microsoft">Microsoft</string>
+    <string name="apple">Apple</string>
     <string name="register_prompt">"Don't have an account yet? \nCreate one now."</string>
     <string name="login_prompt">"Already have an account? \nLogin here."</string>
+    <string name="return_login">Return</string>
 
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>
