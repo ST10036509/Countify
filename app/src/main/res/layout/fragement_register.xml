@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -64,17 +65,38 @@
             android:orientation="vertical"
             android:gravity="center">
 
+            <!-- Full Name EditText -->
+            <EditText
+                android:id="@+id/fullnameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@color/button_gray"
+                android:drawableStart="@drawable/user_icon"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/inter_regular"
+                android:textStyle="bold"
+                android:hint="@string/fullname"
+                android:textColorHint="@color/hint_text_gray"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingEnd="8dp"
+                android:textSize="16sp"
+                android:textColor="@color/hint_text_gray" />
+
             <!-- Email EditText -->
             <EditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="@color/button_gray"
-                android:drawableStart="@drawable/mail"
+                android:drawableStart="@drawable/mail_icon"
                 android:drawablePadding="8dp"
                 android:fontFamily="@font/inter_regular"
+                android:textStyle="bold"
                 android:hint="@string/email"
+                android:textColorHint="@color/hint_text_gray"
                 android:inputType="textEmailAddress"
                 android:paddingStart="10dp"
                 android:paddingEnd="8dp"
@@ -87,9 +109,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
+                android:textColorHint="@color/hint_text_gray"
                 android:fontFamily="@font/inter_regular"
                 android:inputType="textPassword"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:drawableStart="@drawable/lock_icon"
                 android:drawablePadding="8dp"
@@ -98,7 +122,26 @@
                 android:paddingEnd="8dp"
                 android:autofillHints="password"/>
 
-            <!-- Login Button -->
+            <!-- Confirm Password EditText -->
+            <EditText
+                android:id="@+id/confirmPasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/confirm_password"
+                android:textColorHint="@color/hint_text_gray"
+                android:fontFamily="@font/inter_regular"
+                android:inputType="textPassword"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:drawableStart="@drawable/lock_icon"
+                android:drawablePadding="8dp"
+                android:backgroundTint="@color/button_gray"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:autofillHints="password"/>
+
+            <!-- Register Button -->
             <FrameLayout
                 android:id="@+id/loginButtonText"
                 android:layout_width="match_parent"
@@ -117,14 +160,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/login"
+                    android:text="@string/register"
                     android:textColor="@color/white"
                     android:fontFamily="@font/segoe_ui_bold"
                     android:textSize="30sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
-            <!-- SSO Login Options -->
+            <!-- SSO Register Options -->
             <LinearLayout
                 android:id="@+id/ssoButton"
                 android:layout_width="match_parent"
@@ -163,12 +206,12 @@
                     android:src="@drawable/apple_logo" />
             </LinearLayout>
 
-            <!-- Register Account Link -->
+            <!-- Login Account Link -->
             <TextView
                 android:id="@+id/createAccountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/register_prompt"
+                android:text="@string/login_prompt"
                 android:textAlignment="center"
                 android:textColor="@color/button_gray"
                 android:textSize="16sp"
@@ -176,7 +219,7 @@
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="20dp" />
         </LinearLayout>
     </LinearLayout>
 

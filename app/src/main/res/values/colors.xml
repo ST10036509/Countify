@@ -10,4 +10,5 @@
     <color name="button_green">#9cf994</color>
     <color name="button_gray">#4d4d4d</color>
     <color name="hint_text_gray">#999999</color>
+    <color name="red">#FF5C5C</color>
 </resources>
