@@ -142,18 +142,15 @@
                 android:autofillHints="password"/>
 
             <!-- Register Button -->
-            <FrameLayout
-                android:id="@+id/loginButtonText"
-                android:layout_width="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/registerButton"
+                android:layout_width="300dp"
                 android:layout_height="44dp"
-                android:layout_marginTop="40dp">
-
-                <!-- Button Background (View or ImageView for custom drawable) -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button_background"
-                    android:backgroundTint="@color/button_green" />
+                android:layout_marginTop="40dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/button_green"
+                app:cardCornerRadius="25dp"
+                android:layout_gravity="center">
 
                 <!-- Text on top of the Button Background -->
                 <TextView
@@ -165,50 +162,58 @@
                     android:fontFamily="@font/segoe_ui_bold"
                     android:textSize="30sp"
                     android:textStyle="bold" />
-            </FrameLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- SSO Register Options -->
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/ssoButton"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="44dp"
-                android:orientation="horizontal"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/button_gray"
+                app:cardCornerRadius="25dp"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="16dp"
-                android:weightSum="4"
-                android:background="@drawable/rounded_button_background"
-                android:backgroundTint="@color/button_gray">
+                android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="28dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/github_logo_white" />
+                <!-- Horizontal LinearLayout for Icons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="4">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="28dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/google_logo" />
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/github_logo_white" />
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="28dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/microsoft_logo" />
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/google_logo" />
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="28dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/apple_logo_white" />
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/microsoft_logo" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/apple_logo_white" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- Login Account Link -->
             <TextView
-                android:id="@+id/createAccountTextView"
+                android:id="@+id/loginAccountButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_prompt"
