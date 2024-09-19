@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Countify</string>
 
-
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>
 
@@ -18,12 +17,27 @@
     <string name="theme_lbl">Theme (Light)</string>
     <string name="language_lbl">Language (English)</string>
 
-
     <string name="logout_btn">LOG OUT</string>
     <string name="delete_btn">DELETE ACCOUNT</string>
 
     <string name="creators_lbl">Created by HastyHQ</string>
     <string name="version_lbl">Version 1.0</string>
     <!-- End Settings Page -->
+
+
+    <!-- Counter Creation Page -->
+    <string name="create_counter">Create New Counter</string>
+    
+    <string name="title">TITLE:</string>
+    
+    <string name="repeat">REPEAT:</string>
+    
+    <string name="starting_value">STARTING VALUE:</string>
+    
+    <string name="inc_val">INCREMENT VALUE:</string>
+
+    <string name="create">CREATE</string>
+
+    <string name="return_">RETURN</string>
 
 </resources>
