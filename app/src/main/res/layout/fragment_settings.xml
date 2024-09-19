@@ -1,6 +1,292 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F2F2F7">
+
+    <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <!-- Logo and Back Arrow -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="221dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/countify_name___icon_v1" />
+
+            <ImageView
+                android:id="@+id/backArrow"
+                android:layout_width="72dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_back_arrow" />
+        </LinearLayout>
+
+        <!-- Account Details Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_header"
+            android:textSize="20sp"
+            android:textColor="#000"
+            android:layout_gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- Details Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_background"
+            android:padding="16dp">
+
+            <!-- Name Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+                <!-- Label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/name_lbl"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Input Field -->
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/name_example"
+                    android:textColor="#757575"
+                    android:background="@null"
+                    android:gravity="end"
+                    android:focusable="false"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Surname Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+                <!-- Label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/surname_lbl"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Input Field -->
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/surname_example"
+                    android:textColor="#757575"
+                    android:background="@null"
+                    android:focusable="false"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Email Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+                <!-- Label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_lbl"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Input Field -->
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/email_example"
+                    android:textColor="#757575"
+                    android:background="@null"
+                    android:focusable="false"
+                    android:gravity="end"
+                    android:inputType="textEmailAddress"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Phone Number Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_lbl"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Input Field -->
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/phone_example"
+                    android:textColor="#757575"
+                    android:background="@null"
+                    android:gravity="end"
+                    android:focusable="false"
+                    android:inputType="phone"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!-- Toggle Settings -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/rounded_background"
+            android:padding="16dp">
+
+            <!-- Notifications -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/noti_lbl"
+                    android:textSize="16sp"
+                    android:textColor="#000" />
+
+                <Switch
+                    android:id="@+id/switch_notifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Theme -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theme_lbl"
+                    android:textSize="16sp"
+                    android:textColor="#000" />
+
+                <Switch
+                    android:id="@+id/switch_theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Language -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_lbl"
+                    android:textSize="16sp"
+                    android:textColor="#000" />
+
+                <ImageView
+                    android:id="@+id/dropdown_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_down" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Logout and Delete Buttons -->
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/logout_btn"
+            android:textColor="#FFF"
+            android:backgroundTint="#FF6B6B"
+            android:textAllCaps="false"
+            android:layout_marginTop="24dp" />
+
+        <Button
+            android:id="@+id/btn_delete_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_btn"
+            android:textColor="#FFF"
+            android:backgroundTint="#82B1FF"
+            android:textAllCaps="false"
+            android:layout_marginTop="16dp" />
+
+        <!-- Footer Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/creators_lbl"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/version_lbl"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
