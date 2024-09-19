@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Countify</string>
 
+    <!-- Global -->
+
+    <!-- Login & Register Page -->
+    <string name="email">EMAIL</string>
+    <string name="password">PASSWORD</string>
+    <string name="login">LOGIN</string>
+    <string name="register_prompt">"Don't have an account yet? \nCreate one now."</string>
+
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>
 
