@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Countify</string>
+    
+    <string name="create_counter">Create New Counter</string>
+    
+    <string name="title">TITLE:</string>
+    
+    <string name="repeat">REPEAT:</string>
+    
+    <string name="starting_value">STARTING VALUE:</string>
+    
+    <string name="inc_val">INCREMENT VALUE:</string>
+
+    <string name="create">CREATE</string>
+
+    <string name="return_">RETURN</string>
 </resources>
