@@ -77,12 +77,12 @@
                 android:fontFamily="@font/inter_regular"
                 android:textStyle="bold"
                 android:hint="@string/fullname"
-                android:textColorHint="@color/hint_text_gray"
+                android:textColorHint="@color/hint_text_grey"
                 android:inputType="textPersonName"
                 android:paddingStart="10dp"
                 android:paddingEnd="8dp"
                 android:textSize="16sp"
-                android:textColor="@color/hint_text_gray" />
+                android:textColor="@color/hint_text_grey" />
 
             <!-- Email EditText -->
             <EditText
@@ -96,12 +96,12 @@
                 android:fontFamily="@font/inter_regular"
                 android:textStyle="bold"
                 android:hint="@string/email"
-                android:textColorHint="@color/hint_text_gray"
+                android:textColorHint="@color/hint_text_grey"
                 android:inputType="textEmailAddress"
                 android:paddingStart="10dp"
                 android:paddingEnd="8dp"
                 android:textSize="16sp"
-                android:textColor="@color/hint_text_gray" />
+                android:textColor="@color/hint_text_grey" />
 
             <!-- Password EditText -->
             <EditText
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
-                android:textColorHint="@color/hint_text_gray"
+                android:textColorHint="@color/hint_text_grey"
                 android:fontFamily="@font/inter_regular"
                 android:inputType="textPassword"
                 android:textSize="16sp"
@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/confirm_password"
-                android:textColorHint="@color/hint_text_gray"
+                android:textColorHint="@color/hint_text_grey"
                 android:fontFamily="@font/inter_regular"
                 android:inputType="textPassword"
                 android:textSize="16sp"
