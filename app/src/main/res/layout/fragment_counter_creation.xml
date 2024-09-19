@@ -36,7 +36,7 @@
         android:id="@+id/settings_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@drawable/settings_2_svgrepo_com" />
+        android:src="@drawable/settings_icon" />
 </LinearLayout>
 
 
