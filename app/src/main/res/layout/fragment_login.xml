@@ -31,7 +31,7 @@
                 android:id="@+id/logoImageView"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -147,7 +147,7 @@
                     android:layout_width="30dp"
                     android:layout_height="28dp"
                     android:layout_weight="1"
-                    android:src="@drawable/github_logo" />
+                    android:src="@drawable/github_logo_white" />
 
                 <ImageView
                     android:layout_width="30dp"
@@ -165,7 +165,7 @@
                     android:layout_width="30dp"
                     android:layout_height="28dp"
                     android:layout_weight="1"
-                    android:src="@drawable/apple_logo" />
+                    android:src="@drawable/apple_logo_white" />
             </LinearLayout>
 
             <!-- Register Account Link -->
