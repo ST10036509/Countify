@@ -185,7 +185,7 @@
                     android:layout_width="30dp"
                     android:layout_height="28dp"
                     android:layout_weight="1"
-                    android:src="@drawable/github_logo" />
+                    android:src="@drawable/github_logo_white" />
 
                 <ImageView
                     android:layout_width="30dp"
@@ -203,7 +203,7 @@
                     android:layout_width="30dp"
                     android:layout_height="28dp"
                     android:layout_weight="1"
-                    android:src="@drawable/apple_logo" />
+                    android:src="@drawable/apple_logo_white" />
             </LinearLayout>
 
             <!-- Login Account Link -->
