@@ -12,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import st10036509.countify.R
 import st10036509.countify.service.NavigationService
 import st10036509.countify.user_interface.account.RegisterFragment
+import st10036509.countify.user_interface.account.SettingsFragment
 
 class CounterViewFragment : Fragment()
 {
@@ -37,13 +38,13 @@ class CounterViewFragment : Fragment()
         addCounterButton = view.findViewById(R.id.fab_addItemButton)
 
         addCounterButton.setOnClickListener{
-            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+            NavigationService.navigateToFragment(CounterCreationFragment(), R.id.fragment_container)
         }
 
-        settingsButton = view.findViewById(R.id.iv_settingsIcon)
+        settingsButton = view.findViewById(R.id.iv_settingsButton)
 
         settingsButton.setOnClickListener{
-            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+            NavigationService.navigateToFragment(SettingsFragment(), R.id.fragment_container)
         }
     }
 }
