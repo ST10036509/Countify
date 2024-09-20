@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Login Wrapper -->
+    <!-- SSO Wrapper -->
     <LinearLayout
-        android:id="@+id/mainLoginWrapper"
+        android:id="@+id/mainSSOWrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,7 +18,7 @@
 
         <!-- Logo & Name -->
         <TextView
-            android:id="@+id/appNameTextView"
+            android:id="@+id/tv_AppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/eras_itc_demi"
@@ -35,7 +35,7 @@
 
         <!-- Login Form Container -->
         <LinearLayout
-            android:id="@+id/linearLayoutContainer"
+            android:id="@+id/SSOFormContainer"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
@@ -45,7 +45,7 @@
 
             <!-- GitHub Button -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/githubButton"
+                android:id="@+id/btn_GitHub"
                 android:layout_width="300dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="40dp"
@@ -63,7 +63,7 @@
 
                     <!-- GitHub Logo -->
                     <ImageView
-                        android:id="@+id/githubLogo"
+                        android:id="@+id/img_GitHubLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="8dp"
@@ -84,7 +84,7 @@
 
             <!-- Google Button -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/googleButton"
+                android:id="@+id/btn_Google"
                 android:layout_width="300dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="20dp"
@@ -102,7 +102,7 @@
 
                     <!-- Google Logo -->
                     <ImageView
-                        android:id="@+id/googleLogo"
+                        android:id="@+id/img_GoogleImage"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="8dp"
@@ -123,7 +123,7 @@
 
             <!-- Microsoft Button -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/microsoftButton"
+                android:id="@+id/btn_Microsoft"
                 android:layout_width="300dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="20dp"
@@ -141,7 +141,7 @@
 
                     <!-- Apple Logo -->
                     <ImageView
-                        android:id="@+id/microsoftLogo"
+                        android:id="@+id/img_MicrosoftLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="8dp"
@@ -162,7 +162,7 @@
 
             <!-- Apple Button -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/appleButton"
+                android:id="@+id/btn_Apple"
                 android:layout_width="300dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="20dp"
@@ -180,7 +180,7 @@
 
                     <!-- Apple Logo -->
                     <ImageView
-                        android:id="@+id/appleLogo"
+                        android:id="@+id/img_AppleLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="8dp"
@@ -201,7 +201,7 @@
 
             <!-- Return Button -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/returnButton"
+                android:id="@+id/btn_Return"
                 android:layout_width="300dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="40dp"
