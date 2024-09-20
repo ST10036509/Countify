@@ -11,7 +11,7 @@ import st10036509.countify.service.NavigationService
 
 class RegisterFragment: Fragment() {
 
-    private lateinit var backButton: TextView
+    private lateinit var loginButton: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,8 +23,8 @@ class RegisterFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        backButton = view.findViewById(R.id.loginAccountButton)
-        backButton.setOnClickListener {
+        loginButton = view.findViewById(R.id.btn_Login)
+        loginButton.setOnClickListener {
             NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
         }
     }

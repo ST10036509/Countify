@@ -18,6 +18,10 @@
     <string name="register_prompt">"Don't have an account yet? \nCreate one now."</string>
     <string name="login_prompt">"Already have an account? \nLogin here."</string>
     <string name="return_login">Return</string>
+            <!-- ERROR MESSAGES -->
+            <string name="login_invalid_inputs">Please enter a valid email and password</string>
+            <!-- SUCCESS MESSAGES -->
+            <string name="login_successul">Logged in successfully!</string>
 
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>

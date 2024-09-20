@@ -40,8 +40,7 @@ object FirebaseAuthService {
     // method to handle lunching the google sign in UI and getting the selected account ID token
     fun googleSignIn(activity: Activity, resultLauncher: ActivityResultLauncher<Intent>) {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(activity.getString(R.string.default_web_client_id))  // Ensure you've added your web client ID in strings.xml
-            .requestEmail()
+            .requestIdToken(activity.getString(R.string.default_web_client_id))  // web client ID
             .requestProfile()
             .build()
 
