@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 object FirestoreService {
 
     // get the instance of the firestore database
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db by lazy { FirebaseFirestore.getInstance() }
 
     // method to handle the addition of a document to a specified collection
     fun addDocument(collection: String, data: Map<String, Any>, onComplete: (Boolean, String?) -> Unit) {

@@ -16,40 +16,22 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- Logo Wrapper -->
-        <LinearLayout
-            android:id="@+id/mainLogoContainer"
+        <!-- Logo & Name -->
+        <TextView
+            android:id="@+id/appNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <!-- Logo -->
-            <ImageView
-                android:id="@+id/logoImageView"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginRight="3dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/countify_logo"/>
-
-            <!-- App Name -->
-            <TextView
-                android:id="@+id/appNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/eras_itc_demi"
-                android:text="@string/app_name"
-                android:textColor="@color/button_gray"
-                android:textSize="48sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
-
+            android:fontFamily="@font/eras_itc_demi"
+            android:text="@string/app_name"
+            android:textColor="@color/button_gray"
+            android:textSize="48sp"
+            android:drawablePadding="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:contentDescription="@string/app_name"
+            app:drawableStartCompat="@drawable/countify_logo_resized_70" />
 
         <!-- Login Form Container -->
         <LinearLayout
@@ -84,7 +66,7 @@
                         android:id="@+id/githubLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
                         android:contentDescription="@string/github"
                         android:src="@drawable/github_logo_dark_grey" />
 
@@ -111,13 +93,6 @@
                 app:cardCornerRadius="25dp"
                 android:layout_gravity="center">
 
-                <!-- Button Background -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button_background"
-                    android:backgroundTint="#f2f2f7" />
-
                 <!-- Horizontal LinearLayout for Image and Text -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,7 +105,7 @@
                         android:id="@+id/googleLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
                         android:contentDescription="@string/google"
                         android:src="@drawable/google_logo" />
 
@@ -157,13 +132,6 @@
                 app:cardCornerRadius="25dp"
                 android:layout_gravity="center">
 
-                <!-- Button Background -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button_background"
-                    android:backgroundTint="#f2f2f7" />
-
                 <!-- Horizontal LinearLayout for Image and Text -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -176,7 +144,7 @@
                         android:id="@+id/microsoftLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
                         android:contentDescription="@string/microsoft"
                         android:src="@drawable/microsoft_logo" />
 
@@ -203,13 +171,6 @@
                 app:cardCornerRadius="25dp"
                 android:layout_gravity="center">
 
-                <!-- Button Background -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button_background"
-                    android:backgroundTint="#f2f2f7" />
-
                 <!-- Horizontal LinearLayout for Image and Text -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -222,7 +183,7 @@
                         android:id="@+id/appleLogo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
                         android:contentDescription="@string/apple"
                         android:src="@drawable/apple_logo_dark_grey" />
 

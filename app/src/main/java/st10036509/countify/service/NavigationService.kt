@@ -3,7 +3,7 @@ package st10036509.countify.service
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
-// Singleton object to handle applicaiton navigation
+// Singleton object to handle application navigation
 object NavigationService {
 
     // instance object of fragment manager

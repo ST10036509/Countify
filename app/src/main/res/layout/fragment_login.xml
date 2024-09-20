@@ -18,39 +18,22 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- Logo Wrapper -->
-        <LinearLayout
-            android:id="@+id/mainLogoContainer"
+        <!-- Logo & Name -->
+        <TextView
+            android:id="@+id/appNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <!-- Logo -->
-            <ImageView
-                android:id="@+id/logoImageView"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="3dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/countify_logo"/>
-
-            <!-- App Name -->
-            <TextView
-                android:id="@+id/appNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/eras_itc_demi"
-                android:text="@string/app_name"
-                android:textColor="@color/button_gray"
-                android:textSize="48sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
+            android:fontFamily="@font/eras_itc_demi"
+            android:text="@string/app_name"
+            android:textColor="@color/button_gray"
+            android:textSize="48sp"
+            android:drawablePadding="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:contentDescription="@string/app_name"
+            app:drawableStartCompat="@drawable/countify_logo_resized_70" />
 
 
         <!-- Login Form Container -->
@@ -82,7 +65,8 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="8dp"
                 android:textSize="16sp"
-                android:textColor="@color/hint_text_grey" />
+                android:textColor="@color/hint_text_grey"
+                android:autofillHints="emailAddress" />
 
             <!-- Password EditText -->
             <EditText
@@ -151,25 +135,29 @@
                         android:layout_width="30dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-                        android:src="@drawable/github_logo_white" />
+                        android:src="@drawable/github_logo_white"
+                        android:contentDescription="@string/github" />
 
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-                        android:src="@drawable/google_logo" />
+                        android:src="@drawable/google_logo"
+                        android:contentDescription="@string/google" />
 
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-                        android:src="@drawable/microsoft_logo" />
+                        android:src="@drawable/microsoft_logo"
+                        android:contentDescription="@string/microsoft" />
 
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="28dp"
                         android:layout_weight="1"
-                        android:src="@drawable/apple_logo_white" />
+                        android:src="@drawable/apple_logo_white"
+                        android:contentDescription="@string/apple" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

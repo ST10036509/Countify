@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "710600986289",
+    "project_id": "countify-c05bb",
+    "storage_bucket": "countify-c05bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710600986289:android:e578ff55e31705968ddc90",
+        "android_client_info": {
+          "package_name": "st10036509.countify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9Yk_qdTNYDNkIVIn3QhFM9MyFRJ2Ty2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
