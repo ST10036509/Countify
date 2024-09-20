@@ -15,7 +15,7 @@ class CounterCreationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_counter_view, container, false)
+        return inflater.inflate(R.layout.fragment_counter_creation, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
