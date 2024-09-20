@@ -1,13 +1,19 @@
 package st10036509.countify.user_interface.account
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import st10036509.countify.R
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
@@ -18,6 +24,7 @@ class LoginFragment : Fragment() {
 
     // setup service instances
     private lateinit var toaster: Toaster // handle toasting message
+    private lateinit var resultsLauncher: ActivityResultLauncher<Intent> //start google sign-in and handle result
 
     // create object reference for components to handle events
     private lateinit var registerButton: TextView
@@ -63,6 +70,8 @@ class LoginFragment : Fragment() {
         //services
         toaster =  Toaster(this)
 
+        InitaliseActivityResultsLauncher()
+
         // handle onClick event
         loginButton.setOnClickListener{
 
@@ -78,10 +87,43 @@ class LoginFragment : Fragment() {
             }
         }
 
+        googleSSOButton.setOnClickListener{
+            FirebaseAuthService.googleSignIn(requireActivity(), resultsLauncher)
+        }
+
         //handle onClick event
         registerButton.setOnClickListener {
             // use the navigation service (singleton) to navigate to the RegisterFragment
             NavigationService.navigateToFragment(RegisterFragment(), R.id.fragment_container)
+        }
+    }
+
+    // method to initialise the activityLauncher for google sign on
+    private fun InitaliseActivityResultsLauncher() {
+
+        resultsLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try{
+                    val account = task .getResult(ApiException::class.java)
+                    val idToken = account?.idToken
+
+                    if (idToken != null) {
+                        FirebaseAuthService.firebaseAuthWithGoogle(idToken) { isSuccess, errorMessage ->
+                            if (isSuccess) {
+                                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                                toaster.showToast(getString(R.string.login_successful))
+                            } else {
+                                toaster.showToast(errorMessage)
+                            }
+                        }
+                    }
+                } catch (e: ApiException) {
+                    toaster.showToast("Google Sign-In failed: ${e.message}")
+                }
+            }
         }
     }
 
@@ -95,7 +137,7 @@ class LoginFragment : Fragment() {
         FirebaseAuthService.loginUser(email, password) { isSuccess, errorMessage ->
             if (isSuccess) { // login successful
                 NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
-                toaster.showToast(getString(R.string.login_successul))
+                toaster.showToast(getString(R.string.login_successful))
             } else {
                 toaster.showToast(errorMessage) // failed login
             }

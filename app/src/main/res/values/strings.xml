@@ -21,7 +21,7 @@
             <!-- ERROR MESSAGES -->
             <string name="login_invalid_inputs">Please enter a valid email and password</string>
             <!-- SUCCESS MESSAGES -->
-            <string name="login_successul">Logged in successfully!</string>
+            <string name="login_successful">Logged in successfully!</string>
 
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>
