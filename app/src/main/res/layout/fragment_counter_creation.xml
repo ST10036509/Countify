@@ -6,39 +6,69 @@
     android:layout_height="match_parent"
     android:background="#F2F2F7">
 
-    <!-- App Name and Settings Icon -->
+    <!-- Top Banner -->
+
+    <!-- Line -->
     <LinearLayout
-        android:id="@+id/top_bar"
+        android:id="@+id/mainLogoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingTop="24dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023">
 
-    <!-- App Name -->
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:fontFamily="sans-serif-medium"
-        android:layout_weight="1" />  <!-- Takes up available space -->
+        <!-- Logo Icon-->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15sp"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/countify_logo" />
 
-    <!-- Settings Icon -->
-    <ImageView
-        android:id="@+id/settings_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/settings_icon" />
-</LinearLayout>
+        <!-- Application Name -->
+        <TextView
+            android:id="@+id/appNameTextView"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/eras_itc_demi"
+            android:text="@string/app_name"
+            android:textColor="@color/button_gray"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Setting Icon -->
+        <ImageView
+            android:id="@+id/iv_settingsIcon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/settings_icon" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="370dp"
+        android:layout_height="1dp"
+        android:background="@color/button_gray"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainLogoContainer"
+        app:layout_constraintVertical_bias="0.019">
+    </LinearLayout>
 
     <!-- Title: Create a Counter -->
 
@@ -51,11 +81,11 @@
         android:text="@string/create_counter"
         android:textColor="#000000"
         android:textSize="24sp"
-        android:fontFamily=""
+        android:fontFamily="@font/segoe_ui"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
 
     <!-- Create and Return Buttons -->
 
