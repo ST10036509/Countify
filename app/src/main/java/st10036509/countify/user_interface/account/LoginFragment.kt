@@ -1,11 +1,13 @@
 package st10036509.countify.user_interface.account
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -15,10 +17,18 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import st10036509.countify.R
+import st10036509.countify.model.UserManager
+import st10036509.countify.model.UserModel
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
+import st10036509.countify.utils.areNullInputs
+import st10036509.countify.utils.hideKeyboard
+import st10036509.countify.utils.isPasswordStrong
+import st10036509.countify.utils.isValidPhoneNumber
+import st10036509.countify.utils.stringsMatch
+import st10036509.countify.utils.toMutableListLogin
 
 class LoginFragment : Fragment() {
 
@@ -27,9 +37,13 @@ class LoginFragment : Fragment() {
     private lateinit var resultsLauncher: ActivityResultLauncher<Intent> //start google sign-in and handle result
 
     // create object reference for components to handle events
-    private lateinit var registerButton: TextView
     private lateinit var loginButton: CardView
+    private lateinit var registerButton: TextView
     private lateinit var  googleSSOButton: CardView
+
+    //data structures
+    data class LoginInputs(val email: String,
+                           val password: String)
 
     // on fragment creation inflate the fragment
     override fun onCreateView(
@@ -70,7 +84,7 @@ class LoginFragment : Fragment() {
         //services
         toaster =  Toaster(this)
 
-        InitaliseActivityResultsLauncher()
+        //initialiseActivityResultsLauncher()
 
         // handle onClick event
         loginButton.setOnClickListener{
@@ -79,11 +93,13 @@ class LoginFragment : Fragment() {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
+            val inputs = LoginInputs(email, password)
+
             //check if inputs are valid
-            if (!areInputsValid(email, password)) { // inputs are invalid
+            if (!areInputsValid(inputs)) { // inputs are invalid
                 toaster.showToast(getString(R.string.login_invalid_inputs))
             } else { // inputs are valid
-                handleEmailPasswordLogin(email, password) // verify login credentials an handle success/failure
+                handleEmailPasswordLogin(inputs) // verify login credentials an handle success/failure
             }
         }
 
@@ -99,16 +115,20 @@ class LoginFragment : Fragment() {
     }
 
     // method to initialise the activityLauncher for google sign on
-    private fun InitaliseActivityResultsLauncher() {
+    /*private fun initialiseActivityResultsLauncher() {
 
         resultsLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
+            toaster.showToast(result.resultCode.toString())
+            toaster.showToast(Activity.RESULT_OK.toString())
             if (result.resultCode == Activity.RESULT_OK) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 try{
                     val account = task .getResult(ApiException::class.java)
                     val idToken = account?.idToken
+
+                    toaster.showToast("ID Token: $idToken")
 
                     if (idToken != null) {
                         FirebaseAuthService.firebaseAuthWithGoogle(idToken) { isSuccess, errorMessage ->
@@ -119,25 +139,60 @@ class LoginFragment : Fragment() {
                                 toaster.showToast(errorMessage)
                             }
                         }
+                    } else {
+                        toaster.showToast("ID Token is null")
                     }
                 } catch (e: ApiException) {
                     toaster.showToast("Google Sign-In failed: ${e.message}")
                 }
             }
         }
-    }
+    }*/
 
     // method to check if email and password are valid inputs
-    private fun areInputsValid(email: String, password: String): Boolean {
-        return email.isNotEmpty() && password.isNotEmpty()
+    private fun areInputsValid(inputs: LoginInputs): Boolean {
+
+        val inputsList = inputs.toMutableListLogin()
+
+        val context = requireContext() // ensure you're within a fragment
+
+        val validationChecks = listOf(
+
+            !areNullInputs(inputsList) to { context.getString(R.string.null_inputs_error) }
+
+        )
+
+        for ((isValid, errorMessage) in validationChecks) {
+            if (!isValid) {
+                toaster.showToast(errorMessage())
+                return false
+            }
+        }
+
+        // all inputs valid
+        return true
     }
 
     // method to handle email & password login authentication
-    private fun handleEmailPasswordLogin(email: String, password: String) {
-        FirebaseAuthService.loginUser(email, password) { isSuccess, errorMessage ->
+    private fun handleEmailPasswordLogin(inputs: LoginInputs) {
+        FirebaseAuthService.loginUser(inputs.email, inputs.password) { isSuccess, errorMessage ->
             if (isSuccess) { // login successful
+
+                val currentUser = FirebaseAuthService.getCurrentUser()
+
+                if (currentUser != null) {
+                    UserManager.currentUser = UserModel(
+                        userId = currentUser.uid,
+                        firstName = "", //  fetch this from the database
+                        lastName = "",  // fetch this from the database
+                        email = inputs.email,
+                        phoneNumber = "" //  fetch this from the database
+                    )
+                }
+
                 NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
                 toaster.showToast(getString(R.string.login_successful))
+                hideKeyboard()
             } else {
                 toaster.showToast(errorMessage) // failed login
             }

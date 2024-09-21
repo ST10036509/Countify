@@ -20,7 +20,7 @@
 
         <!-- Logo & Name -->
         <TextView
-            android:id="@+id/tv_AppName"
+            android:id="@+id/tv_Logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/eras_itc_demi"
@@ -53,7 +53,6 @@
                 android:id="@+id/edt_Email"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:backgroundTint="@color/button_gray"
                 android:drawableStart="@drawable/mail_icon"
                 android:drawablePadding="8dp"
