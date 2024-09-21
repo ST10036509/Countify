@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import st10036509.countify.R
+import kotlin.math.log
 
 object FirebaseAuthService {
 

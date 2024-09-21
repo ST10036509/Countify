@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import st10036509.countify.R
+import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.user_interface.counter.CounterViewFragment
 
@@ -48,6 +49,7 @@ class SettingsFragment : Fragment() {
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton("Yes") { dialog, which ->
                     // if the user confirms, navigate to the LoginFragment
+                    FirebaseAuthService.logout()
                     NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
                 }
                 .setNegativeButton("No") { dialog, which ->

@@ -5,10 +5,12 @@
     <string name="default_web_client_id">710600986289-jenm1k6hg57ujiuv8tpu50f68v1h0m92.apps.googleusercontent.com</string>
 
     <!-- Login, SSO, & Register Page -->
-    <string name="fullname">FULL NAME</string>
+    <string name="firstname">FIRST NAME</string>
+    <string name="lastname">LAST NAME</string>
     <string name="email">EMAIL</string>
     <string name="password">PASSWORD</string>
     <string name="confirm_password">CONFIRM PASSWORD</string>
+    <string name="phone_number">PHONE NUMBER</string>
     <string name="login">LOGIN</string>
     <string name="register">REGISTER</string>
     <string name="github">GitHub</string>
@@ -20,8 +22,15 @@
     <string name="return_login">Return</string>
             <!-- ERROR MESSAGES -->
             <string name="login_invalid_inputs">Please enter a valid email and password</string>
+            <string name="null_inputs_error">"Please fill out all fields"</string>
+            <string name="invalid_phone_number_error">Please input a valid phone number</string>
+            <string name="password_mismatch_error">Passwords do not match</string>
+            <string name="weak_password_error">Password is too weak. Ensure it has at least ONE Capital,
+                                                   Digit, and Special Symbol and is 8 characters long</string>
+            <string name="registration_failed_header">Registration failed:</string>
             <!-- SUCCESS MESSAGES -->
             <string name="login_successful">Logged in successfully!</string>
+            <string name="registration_successful">Registration successfully!</string>
 
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>
