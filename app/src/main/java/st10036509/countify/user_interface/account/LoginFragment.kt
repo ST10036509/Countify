@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import st10036509.countify.R
 import st10036509.countify.model.UserManager
 import st10036509.countify.model.UserModel
 import st10036509.countify.service.FirebaseAuthService
+import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
@@ -176,25 +178,23 @@ class LoginFragment : Fragment() {
     // method to handle email & password login authentication
     private fun handleEmailPasswordLogin(inputs: LoginInputs) {
         FirebaseAuthService.loginUser(inputs.email, inputs.password) { isSuccess, errorMessage ->
-            if (isSuccess) { // login successful
-
-                val currentUser = FirebaseAuthService.getCurrentUser()
-
-                if (currentUser != null) {
-                    UserManager.currentUser = UserModel(
-                        userId = currentUser.uid,
-                        firstName = "", //  fetch this from the database
-                        lastName = "",  // fetch this from the database
-                        email = inputs.email,
-                        phoneNumber = "" //  fetch this from the database
-                    )
+            if (isSuccess) {
+                val currentUser = FirebaseAuthService.getCurrentUser()?.uid ?: ""
+                if (currentUser.isNotEmpty()) {
+                    FirestoreService.getUserDocument(currentUser) { isSuccess, errorMessage ->
+                        if (isSuccess) {
+                            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                            toaster.showToast(getString(R.string.login_successful))
+                            hideKeyboard()
+                            Log.d("Data", UserManager.currentUser?.firstName ?: "not found")
+                        } else {
+                            FirebaseAuthService.logout()
+                            toaster.showToast("Error: $errorMessage")
+                        }
+                    }
                 }
-
-                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
-                toaster.showToast(getString(R.string.login_successful))
-                hideKeyboard()
             } else {
-                toaster.showToast(errorMessage) // failed login
+                toaster.showToast(errorMessage) // Failed login
             }
         }
     }

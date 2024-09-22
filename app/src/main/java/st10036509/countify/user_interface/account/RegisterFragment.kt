@@ -1,6 +1,7 @@
 package st10036509.countify.user_interface.account
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +10,11 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import st10036509.countify.R
+import st10036509.countify.model.CounterModel
 import st10036509.countify.model.UserManager
 import st10036509.countify.model.UserModel
 import st10036509.countify.service.FirebaseAuthService
+import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
@@ -133,22 +136,38 @@ class RegisterFragment: Fragment() {
     }
 
     private fun handleEmailPasswordRegister(inputs: RegisterInputs) {
-
-        val context = requireContext() // ensure you're within a fragment
+        val context = requireContext() // Ensure you're within a fragment
 
         FirebaseAuthService.registerUser(inputs.email, inputs.password) { isSuccess, errorMessage ->
             if (isSuccess) {
+                val userId = FirebaseAuthService.getCurrentUser()?.uid ?: ""
 
-                UserManager.currentUser = UserModel(
-                    userId = FirebaseAuthService.getCurrentUser()?.uid ?: "",
+                Log.d("FirebaseAuthService", "Current user ID: $userId") // Check userId
+
+                val newUser = UserModel(
+                    userId = userId, // new userId
                     firstName = inputs.firstName,
                     lastName = inputs.lastName,
                     email = inputs.email,
-                    phoneNumber = inputs.phoneNumber
+                    phoneNumber = inputs.phoneNumber,
+                    notificationsEnabled = true, // yes notifications
+                    darkModeEnabled = false, // no darkMode
+                    language = 0, // english
+                    counters = emptyList() //empty list
                 )
 
-                toaster.showToast( context.getString(R.string.registration_successful) )
-                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                // Call addUserDocument with a completion handler
+                FirestoreService.addUserDocument(userId, newUser) { isDocumentAdded, documentError ->
+                    if (isDocumentAdded) {
+                        UserManager.currentUser = newUser
+                        toaster.showToast(context.getString(R.string.registration_successful))
+                        NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                    } else {
+                        FirebaseAuthService.logout()
+                        toaster.showToast(" ${context.getString(R.string.registration_failed_header)} $documentError")
+                    }
+                }
+
                 hideKeyboard()
             } else {
                 toaster.showToast(" ${context.getString(R.string.registration_failed_header)} $errorMessage")
