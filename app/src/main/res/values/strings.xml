@@ -71,4 +71,12 @@
 
     <string name="return_">RETURN</string>
 
+    <!-- Spinner Values -->
+    <string-array name="repeat_options">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+
 </resources>
