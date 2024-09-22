@@ -30,3 +30,30 @@ fun isValidPhoneNumber(phoneNumber: String): Boolean {
 
     return regex.matches(phoneNumber)
 }
+
+fun isTitleNull(title: String): Boolean {
+    var isEmpty: Boolean = false
+    if(title.isEmpty() || title.isBlank())
+    {
+        isEmpty = true
+    }
+    return isEmpty
+}
+
+fun isMoreThanZero(number: Int): Boolean{
+    var isMoreThanZero: Boolean = false
+
+    if (number > 0 ){
+        isMoreThanZero = true
+    }
+    return isMoreThanZero
+}
+
+fun isMoreThanOne(number: Int): Boolean{
+    var isMoreThanOne: Boolean = false
+
+    if (number > 1){
+        isMoreThanOne = true
+    }
+    return isMoreThanOne
+}
