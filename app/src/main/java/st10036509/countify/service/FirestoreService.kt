@@ -1,9 +1,7 @@
 package st10036509.countify.service
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import st10036509.countify.model.UserManager
 import st10036509.countify.model.UserModel
 
@@ -25,13 +23,13 @@ object FirestoreService {
 
     // method to handle the fetching of a specified document from a collection
     fun getUserDocument(userId: String, onComplete: (Boolean, String?) -> Unit) {
-        db.collection("users").document(userId).get() // Change "user" to "users"
+        db.collection("users").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val userModel = document.toObject(UserModel::class.java)
                     if (userModel != null) {
                         UserManager.currentUser = userModel
-                        onComplete(true, null) // Indicate success
+                        onComplete(true, null)
                     } else {
                         onComplete(false, "User data is null")
                     }

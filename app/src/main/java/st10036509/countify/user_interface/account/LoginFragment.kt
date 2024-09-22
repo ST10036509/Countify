@@ -1,25 +1,16 @@
 package st10036509.countify.user_interface.account
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
 import st10036509.countify.R
-import st10036509.countify.model.UserManager
-import st10036509.countify.model.UserModel
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
@@ -27,9 +18,6 @@ import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
 import st10036509.countify.utils.areNullInputs
 import st10036509.countify.utils.hideKeyboard
-import st10036509.countify.utils.isPasswordStrong
-import st10036509.countify.utils.isValidPhoneNumber
-import st10036509.countify.utils.stringsMatch
 import st10036509.countify.utils.toMutableListLogin
 
 class LoginFragment : Fragment() {
@@ -177,24 +165,23 @@ class LoginFragment : Fragment() {
 
     // method to handle email & password login authentication
     private fun handleEmailPasswordLogin(inputs: LoginInputs) {
-        FirebaseAuthService.loginUser(inputs.email, inputs.password) { isSuccess, errorMessage ->
-            if (isSuccess) {
+        FirebaseAuthService.loginUser(inputs.email, inputs.password) { isLoginSuccess, loginErrorMessage ->
+            if (isLoginSuccess) {
                 val currentUser = FirebaseAuthService.getCurrentUser()?.uid ?: ""
                 if (currentUser.isNotEmpty()) {
-                    FirestoreService.getUserDocument(currentUser) { isSuccess, errorMessage ->
-                        if (isSuccess) {
+                    FirestoreService.getUserDocument(currentUser) { isDocumentRetrieved, documentErrorMessage ->
+                        if (isDocumentRetrieved) {
                             NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
                             toaster.showToast(getString(R.string.login_successful))
                             hideKeyboard()
-                            Log.d("Data", UserManager.currentUser?.firstName ?: "not found")
                         } else {
                             FirebaseAuthService.logout()
-                            toaster.showToast("Error: $errorMessage")
+                            toaster.showToast("Error: $documentErrorMessage")
                         }
                     }
                 }
             } else {
-                toaster.showToast(errorMessage) // Failed login
+                toaster.showToast(loginErrorMessage) // Failed login
             }
         }
     }
