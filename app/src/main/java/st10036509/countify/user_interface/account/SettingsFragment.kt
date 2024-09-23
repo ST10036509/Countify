@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import st10036509.countify.MainActivity
 import st10036509.countify.R
+import st10036509.countify.model.UserManager
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
@@ -41,16 +42,20 @@ class SettingsFragment : Fragment() {
     private lateinit var themeSwitch: Switch
     private lateinit var langSwitch: Switch
 
+    private lateinit var nameDisplay: TextView
+    private lateinit var surnameDisplay: TextView
+    private lateinit var emailDisplay: TextView
+
     // get the current user (if they are logged in)
     val currentUser = FirebaseAuthService.getCurrentUser()
 
-    val nameDisplay = view?.findViewById<EditText>(R.id.name_input_txt)
-    val surnameDisplay = view?.findViewById<EditText>(R.id.surname_input_txt)
-    val emailDisplay = view?.findViewById<EditText>(R.id.email_input_txt)
-
-    val notiDisplay = view?.findViewById<Switch>(R.id.switch_notifications)
-    val themeDisplay = view?.findViewById<Switch>(R.id.switch_theme)
-    val langDisplay = view?.findViewById<Switch>(R.id.switch_language)
+//    val nameDisplay = view?.findViewById<TextView>(R.id.name_input_txt)
+//    val surnameDisplay = view?.findViewById<TextView>(R.id.surname_input_txt)
+//    val emailDisplay = view?.findViewById<TextView>(R.id.email_input_txt)
+//
+//    val notiDisplay = view?.findViewById<Switch>(R.id.switch_notifications)
+//    val themeDisplay = view?.findViewById<Switch>(R.id.switch_theme)
+//    val langDisplay = view?.findViewById<Switch>(R.id.switch_language)
 
     private lateinit var toaster: Toaster // handle toasting message
 
@@ -59,63 +64,51 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
+
+        nameDisplay = view.findViewById(R.id.name_input_txt)
+        surnameDisplay = view.findViewById(R.id.surname_input_txt)
+        emailDisplay = view.findViewById(R.id.email_input_txt)
+
+        val notiDisplay = view?.findViewById<Switch>(R.id.switch_notifications)
+        val themeDisplay = view?.findViewById<Switch>(R.id.switch_theme)
+        val langDisplay = view?.findViewById<Switch>(R.id.switch_language)
 
         toaster =  Toaster(this)
+        toaster.showToast(UserManager.currentUser?.email.toString())
 
         if (currentUser != null) {
             val userId = currentUser.uid
 
-            // Get Firestore instance
-            val db = FirebaseFirestore.getInstance()
+            val firstName = UserManager.currentUser?.firstName ?: "N/A"
+            val lastName = UserManager.currentUser?.lastName ?: "N/A"
+            val email = UserManager.currentUser?.email ?: "N/A"
 
-            // Query Firestore for the document that matches the current user's ID
-            db.collection("users").document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        // Retrieve data from the document
-                        val firstName = document.getString("firstname")
-                        val lastName = document.getString("lastname")
-                        val email = document.getString("email")
+            val notiOption = UserManager.currentUser?.notificationsEnabled ?: false
+            val themeOption = UserManager.currentUser?.darkModeEnabled ?: false
+            val langOption = UserManager.currentUser?.language ?: "en"
 
-                        val notiOption = document.getBoolean("notificationsEnabled")
-                        val themeOption = document.getBoolean("darkModeEnabled")
-                        //val langOption = document.getString("language")
+            // Use the retrieved data
+            nameDisplay?.text = firstName
+            surnameDisplay?.text = lastName
+            emailDisplay?.text = email
 
-                        // Use the retrieved data
-                        nameDisplay?.setText(firstName)
-                        surnameDisplay?.setText(lastName)
-                        emailDisplay?.setText(email)
-                        if (notiOption != null) {
-                            notiDisplay?.isChecked = notiOption
-                        }
-                        if (themeOption != null) {
-                            themeDisplay?.isChecked = themeOption
-                        }
-//                        if (langOption == "0")
-//                        {
-//                            langDisplay?.isChecked = false
-//                        }
 
-                    } else {
-                        FirebaseAuthService.logout()
-                        toaster.showToast("Error: No user found")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("FirestoreError", "Error fetching user data: ${exception.message}")
-                    FirebaseAuthService.logout()
-                    toaster.showToast("Error: No user found")
-                }
-        } else {
-            FirebaseAuthService.logout()
-            toaster.showToast("Error: No user found")
+//            if (notiOption != null) {
+//                notiDisplay?.isChecked = notiOption
+//            }
+//            if (themeOption != null) {
+//                themeDisplay?.isChecked = themeOption
+//            }
+//            if (langOption == "0")
+//            {
+//                langDisplay?.isChecked = false
+//            }
+
         }
 
-
-
         // inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        return view
     }
 
     // when the view is created bind the register TextView to its object
