@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="firstname">EERSTE NAAM</string>
+    <string name="lastname">LAATSTE NAAM</string>
+    <string name="email">EPOS</string>
+    <string name="password">WAGWOORD</string>
+    <string name="confirm_password">BEVESTIG WAGWOORD</string>
+    <string name="phone_number">TELEFOON NOMMER</string>
+    <string name="login">TEKEN IN</string>
+    <string name="register">REGISTEER</string>
+    <string name="register_prompt">Het jy nog nie \'n rekening nie? \nSkep een nou.</string>
+    <string name="login_prompt">Het jy al \'n rekening? \nTeken hier in.</string>
+    <string name="return_login">Terug</string>
+    <string name="login_invalid_inputs">Verskaf asseblief \'n geldige epos en wagwoord</string>
+    <string name="null_inputs_error">Vul asseblief al die velde in</string>
+    <string name="invalid_phone_number_error">Verskaf asseblief \'n geldige telefoon nommer</string>
+    <string name="password_mismatch_error">Wagwoorde stem nie ooreen nie</string>
+    <string name="weak_password_error">Wagwoord is te swak. Verseker dat dit ten minste EEN Hoofletter, Cijfer en Spesiale Simbool bevat en 8 karakters lank is</string>
+    <string name="registration_failed_header">Registrasie het misluk:</string>
+    <string name="login_successful">Suksesvol ingeteken!</string>
+    <string name="registration_successful">Registrasie suksesvol!</string>
+    <string name="settings_header">Rekeningbesonderhede</string>
+    <string name="advice_header">Daaglikse Raad</string>
+    <string name="name_lbl">Naam:</string>
+    <string name="surname_lbl">Van:</string>
+    <string name="email_lbl">Epos:</string>
+    <string name="noti_on_lbl">Kennisgewings (Aan)</string>
+    <string name="noti_off_lbl">Kennisgewings (Af)</string>
+    <string name="theme_light_lbl">Tema (Lig)</string>
+    <string name="theme_dark_lbl">Tema (Donker)</string>
+    <string name="language_eng_lbl">Taal (Engels)</string>
+    <string name="language_afr_lbl">Taal (Afrikaans)</string>
+    <string name="logout_btn">TEKEN UIT</string>
+    <string name="delete_btn">VERWYDER REKENING</string>
+    <string name="creators_lbl">Geskep deur HastyHQ</string>
+    <string name="version_lbl">Weergawe 1.0</string>
+    <string name="create_counter">Skep Nuwe Teller</string>
+    <string name="title">TITEL:</string>
+    <string name="repeat">HERHAAL:</string>
+    <string name="starting_value">BEGINWAARDE:</string>
+    <string name="inc_val">VERHOOGWAARDE:</string>
+    <string name="create">SKEP</string>
+    <string name="return_">TERUG</string>
+
+    <!-- Spinner Values -->
+    <string-array name="repeat_options">
+        <item>Daagliks</item>
+        <item>Weekliks</item>
+        <item>Maandeliks</item>
+        <item>Jaarliks</item>
+    </string-array>
+</resources>
