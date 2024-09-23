@@ -9,10 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Top Banner -->
@@ -23,9 +21,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!-- Logo Icon-->
@@ -42,7 +37,7 @@
             <!-- Application Name -->
             <TextView
                 android:id="@+id/appNameTextView"
-                android:layout_width="285dp"
+                android:layout_width="275dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/eras_itc_demi"
                 android:text="@string/app_name"
@@ -113,6 +108,7 @@
 
                 <!-- Input Field -->
                 <EditText
+                    android:id="@+id/name_input_txt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -142,6 +138,7 @@
 
                 <!-- Input Field -->
                 <EditText
+                    android:id="@+id/surname_input_txt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -171,6 +168,7 @@
 
                 <!-- Input Field -->
                 <EditText
+                    android:id="@+id/email_input_txt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -190,26 +188,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!-- Label -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/phone_lbl"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <!-- Input Field -->
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:focusable="false"
-                    android:gravity="end"
-                    android:inputType="phone"
-                    android:text="@string/phone_example"
-                    android:textColor="#757575"
-                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -220,7 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_background"
             android:orientation="vertical"
             android:padding="16dp">
@@ -235,14 +213,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/noti_lbl"
+                    android:text="@string/noti_on_lbl"
                     android:textColor="#000"
                     android:textSize="16sp" />
 
                 <Switch
                     android:id="@+id/switch_notifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:checked="true"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
             </LinearLayout>
 
             <!-- Theme -->
@@ -256,14 +237,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/theme_lbl"
+                    android:text="@string/theme_light_lbl"
                     android:textColor="#000"
                     android:textSize="16sp" />
 
                 <Switch
                     android:id="@+id/switch_theme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
             </LinearLayout>
 
             <!-- Language -->
@@ -277,57 +260,95 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/language_lbl"
+                    android:text="@string/language_eng_lbl"
                     android:textColor="#000"
                     android:textSize="16sp" />
 
-                <ImageView
-                    android:id="@+id/dropdown_btn"
-                    android:layout_width="wrap_content"
+                <Switch
+                    android:id="@+id/switch_language"
+                    android:layout_width="match_parent"
+                    android:checked="true"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_down" />
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Logout and Delete Buttons -->
-        <Button
+
+    <!-- API Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_background"
+        android:orientation="vertical"
+        android:layout_marginBottom="30dp"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/advice_header"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/adviceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="12sp"
+            android:padding="6dp"/>
+
+    </LinearLayout>
+
+
+
+
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/btn_logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#FF6B6B"
-            android:text="@string/logout_btn"
-            android:textAllCaps="false"
-            android:textColor="#FFF" />
+            android:layout_width="300dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#82B1FF"
+            app:cardCornerRadius="25dp"
+            android:layout_gravity="center">
 
-        <Button
+            <!-- Text on top of the Button Background -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/logout_btn"
+                android:textColor="@color/white"
+                android:fontFamily="@font/segoe_ui_bold"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/btn_delete_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#82B1FF"
-            android:text="@string/delete_btn"
-            android:textAllCaps="false"
-            android:textColor="#FFF" />
+            android:layout_width="300dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#F99494"
+            app:cardCornerRadius="25dp"
+            android:layout_gravity="center">
 
-        <!-- Footer Info -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/creators_lbl"
-            android:textColor="#000000"
-            android:textSize="12sp" />
+            <!-- Text on top of the Button Background -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/delete_btn"
+                android:textColor="@color/white"
+                android:fontFamily="@font/segoe_ui_bold"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:text="@string/version_lbl"
-            android:textColor="#000000"
-            android:textSize="12sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
