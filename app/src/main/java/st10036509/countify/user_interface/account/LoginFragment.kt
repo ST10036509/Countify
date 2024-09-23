@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import st10036509.countify.R
+import st10036509.countify.model.UserManager
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
@@ -93,9 +94,7 @@ class LoginFragment : Fragment() {
             }
         }
 
-        googleSSOButton.setOnClickListener{
-            FirebaseAuthService.googleSignIn(requireActivity(), resultsLauncher)
-        }
+        googleSSOButton.setOnClickListener { }
 
         //handle onClick event
         registerButton.setOnClickListener {
@@ -103,41 +102,6 @@ class LoginFragment : Fragment() {
             NavigationService.navigateToFragment(RegisterFragment(), R.id.fragment_container)
         }
     }
-
-    // method to initialise the activityLauncher for google sign on
-    /*private fun initialiseActivityResultsLauncher() {
-
-        resultsLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            toaster.showToast(result.resultCode.toString())
-            toaster.showToast(Activity.RESULT_OK.toString())
-            if (result.resultCode == Activity.RESULT_OK) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                try{
-                    val account = task .getResult(ApiException::class.java)
-                    val idToken = account?.idToken
-
-                    toaster.showToast("ID Token: $idToken")
-
-                    if (idToken != null) {
-                        FirebaseAuthService.firebaseAuthWithGoogle(idToken) { isSuccess, errorMessage ->
-                            if (isSuccess) {
-                                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
-                                toaster.showToast(getString(R.string.login_successful))
-                            } else {
-                                toaster.showToast(errorMessage)
-                            }
-                        }
-                    } else {
-                        toaster.showToast("ID Token is null")
-                    }
-                } catch (e: ApiException) {
-                    toaster.showToast("Google Sign-In failed: ${e.message}")
-                }
-            }
-        }
-    }*/
 
     // method to check if email and password are valid inputs
     private fun areInputsValid(inputs: LoginInputs): Boolean {

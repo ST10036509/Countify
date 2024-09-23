@@ -84,6 +84,8 @@ class RegisterFragment: Fragment() {
             registerUser()
         }
 
+        googleSSOButton.setOnClickListener(){ }
+
         loginButton.setOnClickListener {
             NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
         }
@@ -149,7 +151,6 @@ class RegisterFragment: Fragment() {
                     firstName = inputs.firstName,
                     lastName = inputs.lastName,
                     email = inputs.email,
-                    phoneNumber = inputs.phoneNumber,
                     notificationsEnabled = true, // yes notifications
                     darkModeEnabled = false, // no darkMode
                     language = 0, // english

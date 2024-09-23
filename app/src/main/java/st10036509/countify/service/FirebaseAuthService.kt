@@ -38,30 +38,6 @@ object FirebaseAuthService {
         }
     }
 
-    // method to handle lunching the google sign in UI and getting the selected account ID token
-    fun googleSignIn(activity: Activity, resultLauncher: ActivityResultLauncher<Intent>) {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(activity.getString(R.string.default_web_client_id))  // web client ID
-            .requestProfile()
-            .build()
-
-        val googleSignInClient = GoogleSignIn.getClient(activity, gso)
-        val signInIntent = googleSignInClient.signInIntent
-        resultLauncher.launch(signInIntent)
-    }
-
-    // method to handle the authentication of the selected google account token from the UI
-    fun firebaseAuthWithGoogle(idToken: String, onComplete: (Boolean, String?) -> Unit) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                onComplete(true, null)
-            } else {
-                onComplete(false, task.exception?.message)
-            }
-        }
-    }
-
     // method to sign the user out
     fun logout() {
         auth.signOut()
