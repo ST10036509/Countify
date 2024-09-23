@@ -1,5 +1,6 @@
 package st10036509.countify.service
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import st10036509.countify.model.UserManager
@@ -67,4 +68,38 @@ object FirestoreService {
             onComplete(false, "User not authenticated")
         }
     }
+
+    fun addCounter(
+        name: String,
+        startValue: Int,
+        incrementValue: Int,
+        repetition: String,
+        createdTimestamp: Long,
+        userId: String,
+        currentValue: Int = 0, // Default parameter for currentValue
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        val counterData = hashMapOf(
+            "createdTimestamp" to createdTimestamp,
+            "currentValue" to currentValue,
+            "incrementValue" to incrementValue,
+            "name" to name,
+            "repetition" to repetition,
+            "startValue" to startValue,
+            "userId" to userId
+        )
+
+        // Add document to Firestore
+        addDocument("counters_tests", counterData) { success, error ->
+            if (success) {
+                onComplete(true, null)
+            } else {
+                // Log or print the error for debugging
+                Log.e("FirestoreService", "Failed to add counter: $error")
+                onComplete(false, error)
+            }
+        }
+    }
+
+
 }
