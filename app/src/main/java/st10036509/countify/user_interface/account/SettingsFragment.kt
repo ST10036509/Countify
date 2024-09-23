@@ -1,7 +1,13 @@
 package st10036509.countify.user_interface.account
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +18,18 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat.recreate
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import st10036509.countify.MainActivity
 import st10036509.countify.R
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
+import java.util.Locale
 
 class SettingsFragment : Fragment() {
 
@@ -37,6 +47,11 @@ class SettingsFragment : Fragment() {
     val nameDisplay = view?.findViewById<EditText>(R.id.name_input_txt)
     val surnameDisplay = view?.findViewById<EditText>(R.id.surname_input_txt)
     val emailDisplay = view?.findViewById<EditText>(R.id.email_input_txt)
+
+    val notiDisplay = view?.findViewById<Switch>(R.id.switch_notifications)
+    val themeDisplay = view?.findViewById<Switch>(R.id.switch_theme)
+    val langDisplay = view?.findViewById<Switch>(R.id.switch_language)
+
     private lateinit var toaster: Toaster // handle toasting message
 
     // on fragment creation inflate the fragment
@@ -63,10 +78,24 @@ class SettingsFragment : Fragment() {
                         val lastName = document.getString("lastname")
                         val email = document.getString("email")
 
+                        val notiOption = document.getBoolean("notificationsEnabled")
+                        val themeOption = document.getBoolean("darkModeEnabled")
+                        //val langOption = document.getString("language")
+
                         // Use the retrieved data
                         nameDisplay?.setText(firstName)
                         surnameDisplay?.setText(lastName)
                         emailDisplay?.setText(email)
+                        if (notiOption != null) {
+                            notiDisplay?.isChecked = notiOption
+                        }
+                        if (themeOption != null) {
+                            themeDisplay?.isChecked = themeOption
+                        }
+//                        if (langOption == "0")
+//                        {
+//                            langDisplay?.isChecked = false
+//                        }
 
                     } else {
                         FirebaseAuthService.logout()
@@ -74,6 +103,7 @@ class SettingsFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { exception ->
+                    Log.e("FirestoreError", "Error fetching user data: ${exception.message}")
                     FirebaseAuthService.logout()
                     toaster.showToast("Error: No user found")
                 }
@@ -138,28 +168,50 @@ class SettingsFragment : Fragment() {
         }
 
 
+        //--------Switch Handling-------//
+        //notifications
         notiSwitch = view.findViewById(R.id.switch_notifications)
         notiSwitch.setOnClickListener {
-            if (notiSwitch.isChecked)
-            {
-
-            }
-            else
-            {
-
+            if (notiSwitch.isChecked) {
+                toaster.showToast("Notifications: Turned On.")
+            } else {
+                toaster.showToast("Notifications: Turned Off.")
             }
         }
-
+        //theme
         themeSwitch = view.findViewById(R.id.switch_theme)
         themeSwitch.setOnClickListener {
-
+            if (themeSwitch.isChecked) {
+                toaster.showToast("Theme: Light On.")
+            } else {
+                toaster.showToast("Theme: Dark Off.")
+            }
         }
-
+        //language
         langSwitch = view.findViewById(R.id.switch_language)
         langSwitch.setOnClickListener {
+            if (langSwitch.isChecked) {
+                // Set language to English
+                toaster.showToast("Language: English.")
+                setAppLocale("default", requireContext())
+                requireActivity().recreate()
 
+            } else {
+                // Set language to Afrikaans
+                toaster.showToast("Taal: Afrikaans.")
+                setAppLocale("af", requireContext())
+                requireActivity().recreate()
+            }
         }
-
     }
 
+    //Language Selector Method
+    fun setAppLocale(language: String, context: Context) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    }
 }
