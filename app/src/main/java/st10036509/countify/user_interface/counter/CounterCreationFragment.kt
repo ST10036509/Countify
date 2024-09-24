@@ -72,7 +72,7 @@ class CounterCreationFragment : Fragment() {
         if (FirebaseAuthService.getCurrentUser() == null) {
             // Prompt for login
             Toast.makeText(requireContext(), "Please log in to create a counter.", Toast.LENGTH_SHORT).show()
-            FirebaseAuthService.googleSignIn(requireActivity(), googleSignInLauncher)
+            //FirebaseAuthService.googleSignIn(requireActivity(), googleSignInLauncher)
         }
 
         // Setup UI components
