@@ -18,6 +18,13 @@ import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import java.util.Locale
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import st10036509.countify.AdviceApiService
+import st10036509.countify.model.AdviceResponse
 
 class SettingsFragment : Fragment() {
 
@@ -92,6 +99,19 @@ class SettingsFragment : Fragment() {
     // reference and handle oncClick event
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        // Initialize Retrofit for the API
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.adviceslip.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val adviceApiService = retrofit.create(AdviceApiService::class.java)
+
+        // Fetch the random advice when fragment is opened
+        fetchRandomAdvice(adviceApiService)
+
 
         val userId = UserManager.currentUser?.userId
 
@@ -211,5 +231,22 @@ class SettingsFragment : Fragment() {
         config.setLocale(locale)
         context.createConfigurationContext(config)
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    }
+
+    private fun fetchRandomAdvice(adviceApiService: AdviceApiService) {
+        adviceApiService.getRandomAdvice().enqueue(object : Callback<AdviceResponse> {
+            override fun onResponse(call: Call<AdviceResponse>, response: Response<AdviceResponse>) {
+                if (response.isSuccessful) {
+                    val advice = response.body()?.slip?.advice
+                    view?.findViewById<TextView>(R.id.adviceTextView)?.text = advice
+                } else {
+                    view?.findViewById<TextView>(R.id.adviceTextView)?.text = "If they're old enough to pee,, they're old enough for me. You have no internet connection by the way."
+                }
+            }
+
+            override fun onFailure(call: Call<AdviceResponse>, t: Throwable) {
+                view?.findViewById<TextView>(R.id.adviceTextView)?.text = "If they're old enough to pee, they're old enough for me. \nYou have no internet connection by the way."
+            }
+        })
     }
 }
