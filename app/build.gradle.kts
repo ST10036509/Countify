@@ -63,6 +63,10 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.play.services.auth)
+    // Firebase Authentication
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+
+    implementation("com.google.firebase:firebase-auth")
 
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)

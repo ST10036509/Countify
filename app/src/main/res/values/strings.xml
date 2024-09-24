@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Countify</string>
 
     <!-- Global -->
-    <string name="default_web_client_id" translatable="false">710600986289-jenm1k6hg57ujiuv8tpu50f68v1h0m92.apps.googleusercontent.com</string>
+    <string name="default_web_client_id" translatable="false">710600986289-vje0r5nvfk0bkje1r7ns22191anv7m7n.apps.googleusercontent.com</string>
 
     <!-- Login, SSO, & Register Page -->
     <string name="firstname">FIRST NAME</string>

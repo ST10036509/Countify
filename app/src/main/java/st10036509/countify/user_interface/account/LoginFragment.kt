@@ -1,17 +1,29 @@
 package st10036509.countify.user_interface.account
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
 import st10036509.countify.R
 import st10036509.countify.model.UserManager
+import st10036509.countify.model.UserModel
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
@@ -25,7 +37,20 @@ class LoginFragment : Fragment() {
 
     // setup service instances
     private lateinit var toaster: Toaster // handle toasting message
-    private lateinit var resultsLauncher: ActivityResultLauncher<Intent> //start google sign-in and handle result
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        Log.i("Google SSO Process: ", "Launcher Started")
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                Log.i("Google SSO Process: ", "Launcher Results Success")
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Log.e("Google API Error : ", e.message.toString())
+            }
+        }
+    }
 
     // create object reference for components to handle events
     private lateinit var loginButton: CardView
@@ -61,6 +86,7 @@ class LoginFragment : Fragment() {
 
         // initialise UI components
         setupUIComponents(view)
+        setupGoogleSignIn()
     }
 
     private fun setupUIComponents(view: View) {
@@ -94,7 +120,12 @@ class LoginFragment : Fragment() {
             }
         }
 
-        googleSSOButton.setOnClickListener { }
+        googleSSOButton.setOnClickListener {
+            Log.i("Google SSO Process: ", "SSO Button Clicked")
+
+            val signInIntent = googleSignInClient.signInIntent
+            resultsLauncher.launch(signInIntent)
+        }
 
         //handle onClick event
         registerButton.setOnClickListener {
@@ -146,6 +177,87 @@ class LoginFragment : Fragment() {
                 }
             } else {
                 toaster.showToast(loginErrorMessage) // Failed login
+            }
+        }
+    }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .requestProfile()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        Log.i("Google SSO Process: ", "Firebase Auth in Process")
+
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+        Log.i("Google SSO Process: ", "Token - $idToken")
+
+        Firebase.auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                Log.i("Google SSO Process: ", "Sign In Process Complete")
+                if (task.isSuccessful) {
+                    Log.i("Google SSO Process: ", "Sign In Successful")
+                    val user = FirebaseAuthService.getCurrentUser()
+                    if (user != null) {
+                        Log.i("Google SSO Process: ", "User doesn't exist")
+                        checkIfUserExistsInFirestore(user)
+                    }
+                } else {
+                    Log.i("Google SSO Process: ", "Sign In Failed")
+                    //error
+                }
+            }
+    }
+
+    private fun checkIfUserExistsInFirestore(user: FirebaseUser) {
+        Log.i("Google SSO Process: ", "Check If User Exists Started")
+
+        val context = requireContext()
+
+        FirestoreService.getUserDocument(user.uid) { isDocumentRetrieved, errorMessage ->
+            if (!isDocumentRetrieved) {
+
+                Log.i("Google SSO Process: ", "No User Document Exists")
+
+                val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+
+                Log.i("Google SSO Process: ", "Account Details" +
+                        "\n - ${account?.id}" +
+                        "\n - ${account?.givenName}" +
+                        "\n - ${account?.familyName}" +
+                        "\n - ${account?.email}")
+
+                val newUser = UserModel(
+                    userId = user.uid,
+                    firstName = account?.givenName.toString(),
+                    lastName = account?.familyName.toString(),
+                    email = account?.email.toString(),
+                    notificationsEnabled = true, // yes notifications
+                    darkModeEnabled = false, // no darkMode
+                    language = 0, // english
+                    counters = emptyList() //empty list
+                )
+
+                Log.i("Google SSO Process: ", "Model Created")
+
+                FirestoreService.addUserDocument(user.uid, newUser) { isDocumentAdded, documentError ->
+                    if (isDocumentAdded) {
+                        Log.i("Google SSO Process: ", "User Document Added Successfully")
+                        UserManager.currentUser = newUser
+                        toaster.showToast(context.getString(R.string.registration_successful))
+                        NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                    } else {
+                        Log.i("Google SSO Process: ", "User Document Add Failed")
+                        FirebaseAuthService.logout()
+                        toaster.showToast(" ${context.getString(R.string.registration_failed_header)} $documentError")
+                    }
+                }
             }
         }
     }
