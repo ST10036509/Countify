@@ -1,35 +1,22 @@
 package st10036509.countify.user_interface.account
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
-import android.os.LocaleList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityCompat.recreate
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import st10036509.countify.MainActivity
 import st10036509.countify.R
 import st10036509.countify.model.UserManager
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
-import st10036509.countify.user_interface.counter.CounterViewFragment
 import java.util.Locale
 
 class SettingsFragment : Fragment() {
@@ -38,6 +25,7 @@ class SettingsFragment : Fragment() {
     private lateinit var backButton: ImageView
     private lateinit var logoutButton: CardView
     private lateinit var deleteButton: CardView
+
     private lateinit var notiSwitch: Switch
     private lateinit var themeSwitch: Switch
     private lateinit var langSwitch: Switch
@@ -45,18 +33,12 @@ class SettingsFragment : Fragment() {
     private lateinit var nameDisplay: TextView
     private lateinit var surnameDisplay: TextView
     private lateinit var emailDisplay: TextView
+    private lateinit var notiText: TextView
+    private lateinit var themeText: TextView
+    private lateinit var langText: TextView
 
     // get the current user (if they are logged in)
     val currentUser = FirebaseAuthService.getCurrentUser()
-
-//    val nameDisplay = view?.findViewById<TextView>(R.id.name_input_txt)
-//    val surnameDisplay = view?.findViewById<TextView>(R.id.surname_input_txt)
-//    val emailDisplay = view?.findViewById<TextView>(R.id.email_input_txt)
-//
-//    val notiDisplay = view?.findViewById<Switch>(R.id.switch_notifications)
-//    val themeDisplay = view?.findViewById<Switch>(R.id.switch_theme)
-//    val langDisplay = view?.findViewById<Switch>(R.id.switch_language)
-
     private lateinit var toaster: Toaster // handle toasting message
 
     // on fragment creation inflate the fragment
@@ -78,8 +60,6 @@ class SettingsFragment : Fragment() {
         toaster.showToast(UserManager.currentUser?.email.toString())
 
         if (currentUser != null) {
-            val userId = currentUser.uid
-
             val firstName = UserManager.currentUser?.firstName ?: "N/A"
             val lastName = UserManager.currentUser?.lastName ?: "N/A"
             val email = UserManager.currentUser?.email ?: "N/A"
@@ -89,24 +69,21 @@ class SettingsFragment : Fragment() {
             val langOption = UserManager.currentUser?.language ?: "en"
 
             // Use the retrieved data
-            nameDisplay?.text = firstName
-            surnameDisplay?.text = lastName
-            emailDisplay?.text = email
+            nameDisplay.text = firstName
+            surnameDisplay.text = lastName
+            emailDisplay.text = email
 
-
-//            if (notiOption != null) {
-//                notiDisplay?.isChecked = notiOption
-//            }
-//            if (themeOption != null) {
-//                themeDisplay?.isChecked = themeOption
-//            }
-//            if (langOption == "0")
-//            {
-//                langDisplay?.isChecked = false
-//            }
-
+            notiDisplay?.isChecked = notiOption
+            themeDisplay?.isChecked = themeOption
+            if (langOption == 0)
+            {
+                langDisplay?.isChecked = true
+            }
+            else
+            {
+                langDisplay?.isChecked = false
+            }
         }
-
         // inflate the layout for this fragment
         return view
     }
@@ -115,8 +92,14 @@ class SettingsFragment : Fragment() {
     // reference and handle oncClick event
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        backButton = view.findViewById(R.id.iv_backBtn)
 
+        val userId = UserManager.currentUser?.userId
+
+        notiText = view.findViewById(R.id.noti_txt)
+        themeText = view.findViewById(R.id.theme_text)
+        langText = view.findViewById(R.id.lang_text)
+
+        backButton = view.findViewById(R.id.iv_backBtn)
         backButton.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
@@ -160,6 +143,9 @@ class SettingsFragment : Fragment() {
                 .show()
         }
 
+        // Set up Firestore and FirebaseAuth instances
+        val db = FirebaseFirestore.getInstance()
+        val auth = FirebaseAuth.getInstance()
 
         //--------Switch Handling-------//
         //notifications
@@ -167,17 +153,33 @@ class SettingsFragment : Fragment() {
         notiSwitch.setOnClickListener {
             if (notiSwitch.isChecked) {
                 toaster.showToast("Notifications: Turned On.")
+                notiText.text = getString(R.string.noti_on_lbl)
+                UserManager.currentUser?.notificationsEnabled = true
+                val userRef = userId?.let { it1 -> db.collection("users").document(it1) }
+                if (userRef != null) {
+                    userRef.update("notificationsEnabled", true)
+                }
             } else {
                 toaster.showToast("Notifications: Turned Off.")
+                notiText.text = getString(R.string.noti_off_lbl)
+                UserManager.currentUser?.notificationsEnabled = false
+                val userRef = userId?.let { it1 -> db.collection("users").document(it1) }
+                if (userRef != null) {
+                    userRef.update("notificationsEnabled", false)
+                }
             }
         }
         //theme
         themeSwitch = view.findViewById(R.id.switch_theme)
         themeSwitch.setOnClickListener {
             if (themeSwitch.isChecked) {
-                toaster.showToast("Theme: Light On.")
+                toaster.showToast("Theme: Dark Mode Coming Soon...")
+                themeText.text = getString(R.string.theme_dark_lbl)
+                UserManager.currentUser?.darkModeEnabled = true
             } else {
-                toaster.showToast("Theme: Dark Off.")
+                toaster.showToast("Theme: Light On.")
+                themeText.text = getString(R.string.theme_light_lbl)
+                UserManager.currentUser?.darkModeEnabled = false
             }
         }
         //language
@@ -186,12 +188,15 @@ class SettingsFragment : Fragment() {
             if (langSwitch.isChecked) {
                 // Set language to English
                 toaster.showToast("Language: English.")
+                langText.text = getString(R.string.language_eng_lbl)
+                UserManager.currentUser?.language = 0
                 setAppLocale("default", requireContext())
                 requireActivity().recreate()
-
             } else {
                 // Set language to Afrikaans
                 toaster.showToast("Taal: Afrikaans.")
+                langText.text = getString(R.string.language_afr_lbl)
+                UserManager.currentUser?.language = 1
                 setAppLocale("af", requireContext())
                 requireActivity().recreate()
             }

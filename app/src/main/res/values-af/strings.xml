@@ -24,7 +24,7 @@
     <string name="name_lbl">Naam:</string>
     <string name="surname_lbl">Van:</string>
     <string name="email_lbl">Epos:</string>
-    <string name="noti_on_lbl">Kennisgewings (Aan)</string>
+    <string name="noti_on_lbl">Kennisgewings (Aan</string>
     <string name="noti_off_lbl">Kennisgewings (Af)</string>
     <string name="theme_light_lbl">Tema (Lig)</string>
     <string name="theme_dark_lbl">Tema (Donker)</string>
