@@ -24,11 +24,11 @@
     <string name="name_lbl">Naam:</string>
     <string name="surname_lbl">Van:</string>
     <string name="email_lbl">Epos:</string>
-    <string name="noti_on_lbl">Kennisgewings (Aan</string>
+    <string name="noti_on_lbl">Kennisgewings (Aan)</string>
     <string name="noti_off_lbl">Kennisgewings (Af)</string>
     <string name="theme_light_lbl">Tema (Lig)</string>
     <string name="theme_dark_lbl">Tema (Donker)</string>
-    <string name="language_eng_lbl">Taal (Engels)</string>
+    <string name="language_eng_lbl">Taal (Afrikaans)</string>
     <string name="language_afr_lbl">Taal (Afrikaans)</string>
     <string name="logout_btn">TEKEN UIT</string>
     <string name="delete_btn">VERWYDER REKENING</string>

@@ -161,14 +161,14 @@ class SettingsFragment : Fragment() {
         themeSwitch = view?.findViewById(R.id.switch_theme)!!
         themeSwitch.setOnClickListener {
             Log.d(TAG, "Theme switch toggled")
-            handleThemeSwitch()
+            handleThemeSwitch(db, userId)
         }
 
         // Language switch
         langSwitch = view?.findViewById(R.id.switch_language)!!
         langSwitch.setOnClickListener {
             Log.d(TAG, "Language switch toggled")
-            handleLanguageSwitch()
+            handleLanguageSwitch(db, userId)
         }
     }
 
@@ -184,23 +184,34 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun handleThemeSwitch() {
+    private fun handleThemeSwitch(db: FirebaseFirestore, userId: String?) {
         val isChecked = themeSwitch.isChecked
         toaster.showToast(if (isChecked) "Theme: Dark Mode Coming Soon..." else "Theme: Light On.")
         themeText.text = if (isChecked) getString(R.string.theme_dark_lbl) else getString(R.string.theme_light_lbl)
         UserManager.currentUser?.darkModeEnabled = isChecked
-        Log.d(TAG, "Theme setting updated: ${if (isChecked) "Dark Mode" else "Light Mode"}")
+
+        userId?.let { id ->
+            db.collection("users").document(id).update("darkModeEnabled", isChecked)
+            Log.d(TAG, "Theme setting updated to ${if (isChecked) "Dark Mode" else "Light Mode"} in Firestore")
+        }
     }
 
-    private fun handleLanguageSwitch() {
+    private fun handleLanguageSwitch(db: FirebaseFirestore, userId: String?) {
         val isChecked = langSwitch.isChecked
+        val languageValue = if (isChecked) 0 else 1  // 0 for English, 1 for Afrikaans
         toaster.showToast(if (isChecked) "Language: English." else "Taal: Afrikaans.")
+
         langText.text = if (isChecked) getString(R.string.language_eng_lbl) else getString(R.string.language_afr_lbl)
-        UserManager.currentUser?.language = if (isChecked) 0 else 1
+        UserManager.currentUser?.language = languageValue
         setAppLocale(if (isChecked) "default" else "af", requireContext())
         requireActivity().recreate()
-        Log.d(TAG, "Language setting updated: ${if (isChecked) "English" else "Afrikaans"}")
+
+        userId?.let { id ->
+            db.collection("users").document(id).update("language", languageValue)  // Save 0 or 1 in Firestore
+            Log.d(TAG, "Language setting updated to ${if (isChecked) "English (0)" else "Afrikaans (1)"} in Firestore")
+        }
     }
+
 
     private fun showLogoutConfirmation() {
         AlertDialog.Builder(requireContext())
