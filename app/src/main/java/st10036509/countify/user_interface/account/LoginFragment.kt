@@ -132,9 +132,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupUIComponents(view: View) {
+
+        Log.i("Login Fragment:", "Initialise Login Fragment Components and Services")
         // bind reference objects to fragment xml components
         // ACTION BUTTONS:
-        Log.i("Login Fragment:", "Initialise Login Fragment Components and Services")
         loginButton = view.findViewById(R.id.btn_Login)
         registerButton = view.findViewById(R.id.btn_Register)
         googleSSOButton = view.findViewById(R.id.btn_SSO)
@@ -143,8 +144,6 @@ class LoginFragment : Fragment() {
         val passwordEditText = view.findViewById<EditText>(R.id.edt_Password)
         //services
         toaster =  Toaster(this)
-
-        //initialiseActivityResultsLauncher()
 
         // handle onClick event for login
         loginButton.setOnClickListener{
