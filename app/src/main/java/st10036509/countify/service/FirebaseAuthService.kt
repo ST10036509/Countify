@@ -1,15 +1,14 @@
+/*
+Author: Ethan Schoonbee
+Student Number: ST10036509
+Date Created: 20/09/2024
+Last Modified: 25/09/2024
+ */
+
 package st10036509.countify.service
 
-import android.app.Activity
-import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import st10036509.countify.R
-import kotlin.math.log
 
 object FirebaseAuthService {
 
@@ -48,3 +47,4 @@ object FirebaseAuthService {
         return auth.currentUser
     }
 }
+//__________________________....oooOO0_END_OF_FILE_0OOooo....__________________________

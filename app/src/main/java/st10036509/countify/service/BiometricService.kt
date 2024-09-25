@@ -1,3 +1,9 @@
+/*
+Author: Ethan Schoonbee
+Student Number: ST10036509
+Date Created: 25/09/2024
+Last Modified: 25/09/2024
+ */
 package st10036509.countify.service
 
 import androidx.biometric.BiometricPrompt
@@ -40,3 +46,4 @@ class BiometricService(private val activity: FragmentActivity) {
         biometricPrompt.authenticate(promptInfo)
     }
 }
+//__________________________....oooOO0_END_OF_FILE_0OOooo....__________________________
