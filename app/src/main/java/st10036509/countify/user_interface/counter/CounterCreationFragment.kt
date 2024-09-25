@@ -172,24 +172,18 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
+        // Create the CounterModel instance
         val counter = CounterModel(
-            userId = userId, // Set userId here
+            userId = userId,
             name = title,
             startValue = start,
             changeValue = increment,
             repetition = repeat,
-            createdTimestamp = timeStamp // Timestamp will be set automatically
+            createdTimestamp = getCurrentTimestamp() // Set the timestamp here
         )
 
-        FirestoreService.addCounter(
-            name = counter.name,
-            startValue = counter.startValue,
-            incrementValue = counter.changeValue,
-            repetition = counter.repetition,
-            createdTimestamp = counter.createdTimestamp,
-            userId = counter.userId, // Pass userId
-            currentValue = counter.currentValue // Pass currentValue
-        ) { success, error ->
+        // Call FirestoreService using the counter model directly
+        FirestoreService.addCounter(counter) { success, error ->
             if (success) {
                 Toast.makeText(requireContext(), "Counter added successfully!", Toast.LENGTH_SHORT).show()
             } else {
@@ -197,5 +191,7 @@ class CounterCreationFragment : Fragment() {
             }
         }
     }
+
+
 
 }

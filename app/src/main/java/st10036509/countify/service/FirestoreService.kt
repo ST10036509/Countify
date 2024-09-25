@@ -3,6 +3,7 @@ package st10036509.countify.service
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import st10036509.countify.model.CounterModel
 import st10036509.countify.model.UserManager
 import st10036509.countify.model.UserModel
 
@@ -70,23 +71,17 @@ object FirestoreService {
     }
 
     fun addCounter(
-        name: String,
-        startValue: Int,
-        incrementValue: Int,
-        repetition: String,
-        createdTimestamp: Long,
-        userId: String,
-        currentValue: Int = 0, // Default parameter for currentValue
+        counter: CounterModel,
         onComplete: (Boolean, String?) -> Unit
     ) {
         val counterData = hashMapOf(
-            "createdTimestamp" to createdTimestamp,
-            "currentValue" to currentValue,
-            "incrementValue" to incrementValue,
-            "name" to name,
-            "repetition" to repetition,
-            "startValue" to startValue,
-            "userId" to userId
+            "createdTimestamp" to counter.createdTimestamp,
+            "currentValue" to counter.currentValue,
+            "incrementValue" to counter.changeValue,
+            "name" to counter.name,
+            "repetition" to counter.repetition,
+            "startValue" to counter.startValue,
+            "userId" to counter.userId
         )
 
         // Add document to Firestore
@@ -100,6 +95,7 @@ object FirestoreService {
             }
         }
     }
+
 
 
 }
