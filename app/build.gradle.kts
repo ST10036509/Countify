@@ -68,6 +68,8 @@ dependencies {
 
     implementation("com.google.firebase:firebase-auth")
 
+    implementation("androidx.biometric:biometric:1.2.0-alpha04")
+
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     implementation(libs.androidx.cardview)

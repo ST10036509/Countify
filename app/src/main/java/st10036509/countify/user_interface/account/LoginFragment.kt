@@ -1,6 +1,8 @@
 package st10036509.countify.user_interface.account
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import st10036509.countify.R
+import st10036509.countify.service.BiometricService
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.GoogleAccountService
@@ -26,6 +29,7 @@ class LoginFragment : Fragment() {
     // setup service instances
     private lateinit var toaster: Toaster // handle toasting message
     private lateinit var googleAccountService: GoogleAccountService
+    private lateinit var biometricService: BiometricService
     private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         googleAccountService.handleSignInResult(result.resultCode, result.data, { user ->
             googleAccountService.checkIfUserExistsInFirestore(user, {
@@ -65,18 +69,46 @@ class LoginFragment : Fragment() {
 
         googleAccountService = GoogleAccountService(requireContext())
         googleAccountService.setupGoogleSignIn(getString(R.string.default_web_client_id))
+        biometricService = BiometricService(requireActivity())
+
+        // initialise UI components
+        setupUIComponents(view)
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         // get the current user (if they are logged in)
         val currentUser = FirebaseAuthService.getCurrentUser()
 
-        // check if a user account is logged in and navigate to the home page
         if (currentUser != null) {
-            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
-            return
+            // Delay biometric prompt to ensure fragment transactions are complete
+            Handler(Looper.getMainLooper()).postDelayed({
+                biometricService.showBiometricPrompt(
+                    onSuccess = {
+                        toaster.showToast("Authentication succeeded!")
+                        FirestoreService.getUserDocument(currentUser.uid) { isDocumentRetrieved, documentErrorMessage ->
+                            if (isDocumentRetrieved) {
+                                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                                toaster.showToast(getString(R.string.login_successful))
+                                hideKeyboard()
+                            } else {
+                                FirebaseAuthService.logout()
+                                toaster.showToast("Error: $documentErrorMessage")
+                            }
+                        }
+                        NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                    },
+                    onFailure = {
+                        toaster.showToast("Authentication failed")
+                    },
+                    onError = { error ->
+                        toaster.showToast("Authentication error: $error")
+                        FirebaseAuthService.logout()
+                    }
+                )
+            }, 500)  // A delay of 500ms (adjust as needed)
         }
-
-        // initialise UI components
-        setupUIComponents(view)
     }
 
     private fun setupUIComponents(view: View) {
