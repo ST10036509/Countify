@@ -33,7 +33,6 @@ class CounterViewFragment : Fragment()
         savedInstanceState: Bundle?
     ): View? {
         setAppLocale(if (UserManager.currentUser?.language == 1) "af" else "default", requireContext())
-        //requireActivity().recreate()
 
         // inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_counter_view, container, false)
