@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '8'  # java version
+          distribution: 'temurin'  # JDK distribution
+
 
       - name: Build with Gradle
         run: ./gradlew build
