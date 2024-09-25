@@ -13,7 +13,7 @@ object FirestoreService {
     private val db by lazy { FirebaseFirestore.getInstance() }
 
     // method to handle the addition of a document to a specified collection
-    fun addDocument(collection: String, data: Map<String, Any>, onComplete: (Boolean, String?) -> Unit) {
+    private fun addDocument(collection: String, data: Map<String, Any>, onComplete: (Boolean, String?) -> Unit) {
         db.collection(collection).add(data)
             .addOnSuccessListener {
                 onComplete(true, null)
@@ -38,17 +38,6 @@ object FirestoreService {
                 } else {
                     onComplete(false, "User document does not exist")
                 }
-            }
-            .addOnFailureListener { exception ->
-                onComplete(false, exception.message)
-            }
-    }
-
-    // method to handle the deletion of a specified document from a collection
-    fun deleteDocument(collection: String, documentId: String, onComplete: (Boolean, String?) -> Unit) {
-        db.collection(collection).document(documentId).delete()
-            .addOnSuccessListener {
-                onComplete(true, null)
             }
             .addOnFailureListener { exception ->
                 onComplete(false, exception.message)

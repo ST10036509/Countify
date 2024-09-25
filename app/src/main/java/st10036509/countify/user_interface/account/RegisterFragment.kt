@@ -7,14 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import st10036509.countify.R
-import st10036509.countify.model.CounterModel
 import st10036509.countify.model.UserManager
 import st10036509.countify.model.UserModel
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
+import st10036509.countify.service.GoogleAccountService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
@@ -28,6 +29,20 @@ import st10036509.countify.utils.toMutableListRegister
 class RegisterFragment: Fragment() {
     // setup service instances
     private lateinit var toaster: Toaster // handle toasting message
+    private lateinit var googleAccountService: GoogleAccountService
+    private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        googleAccountService.handleSignInResult(result.resultCode, result.data, { user ->
+            googleAccountService.checkIfUserExistsInFirestore(user, {
+                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                toaster.showToast(getString(R.string.login_successful))
+            }, { error ->
+                toaster.showToast("Error: $error")
+                FirebaseAuthService.logout()
+            })
+        }, { error ->
+            toaster.showToast(error)
+        })
+    }
 
     // create object reference for components to handle events
     private lateinit var loginButton: TextView
@@ -78,13 +93,19 @@ class RegisterFragment: Fragment() {
         confirmPasswordEditText = view.findViewById<EditText>(R.id.edt_ConfirmPassword)
         //services
         toaster =  Toaster(this)
+        googleAccountService = GoogleAccountService(requireContext())
+        googleAccountService.setupGoogleSignIn(getString(R.string.default_web_client_id))
 
         // Set click listener for register button
         registerButton.setOnClickListener {
             registerUser()
         }
 
-        googleSSOButton.setOnClickListener(){ }
+        googleSSOButton.setOnClickListener(){
+            Log.i("Google SSO Process: ", "SSO Button Clicked")
+
+            googleAccountService.launchSignIn(resultsLauncher)
+        }
 
         loginButton.setOnClickListener {
             NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)

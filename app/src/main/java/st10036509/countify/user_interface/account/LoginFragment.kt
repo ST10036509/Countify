@@ -1,19 +1,19 @@
 package st10036509.countify.user_interface.account
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import st10036509.countify.R
-import st10036509.countify.model.UserManager
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
+import st10036509.countify.service.GoogleAccountService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
@@ -25,7 +25,20 @@ class LoginFragment : Fragment() {
 
     // setup service instances
     private lateinit var toaster: Toaster // handle toasting message
-    private lateinit var resultsLauncher: ActivityResultLauncher<Intent> //start google sign-in and handle result
+    private lateinit var googleAccountService: GoogleAccountService
+    private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        googleAccountService.handleSignInResult(result.resultCode, result.data, { user ->
+            googleAccountService.checkIfUserExistsInFirestore(user, {
+                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                toaster.showToast(getString(R.string.login_successful))
+            }, { error ->
+                toaster.showToast("Error: $error")
+                FirebaseAuthService.logout()
+            })
+        }, { error ->
+            toaster.showToast(error)
+        })
+    }
 
     // create object reference for components to handle events
     private lateinit var loginButton: CardView
@@ -49,6 +62,9 @@ class LoginFragment : Fragment() {
     // reference and handle oncClick event
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        googleAccountService = GoogleAccountService(requireContext())
+        googleAccountService.setupGoogleSignIn(getString(R.string.default_web_client_id))
 
         // get the current user (if they are logged in)
         val currentUser = FirebaseAuthService.getCurrentUser()
@@ -94,7 +110,11 @@ class LoginFragment : Fragment() {
             }
         }
 
-        googleSSOButton.setOnClickListener { }
+        googleSSOButton.setOnClickListener {
+            Log.i("Google SSO Process: ", "SSO Button Clicked")
+
+            googleAccountService.launchSignIn(resultsLauncher)
+        }
 
         //handle onClick event
         registerButton.setOnClickListener {
