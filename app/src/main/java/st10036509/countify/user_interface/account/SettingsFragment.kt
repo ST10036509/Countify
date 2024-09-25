@@ -2,6 +2,7 @@ package st10036509.countify.user_interface.account
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,9 @@ import st10036509.countify.model.AdviceResponse
 
 class SettingsFragment : Fragment() {
 
-    // create object reference for components to handle events
+    private val TAG = "SettingsFragment"
+
+    // UI components
     private lateinit var backButton: ImageView
     private lateinit var logoutButton: CardView
     private lateinit var deleteButton: CardView
@@ -44,29 +47,34 @@ class SettingsFragment : Fragment() {
     private lateinit var themeText: TextView
     private lateinit var langText: TextView
 
-    // get the current user (if they are logged in)
-    val currentUser = FirebaseAuthService.getCurrentUser()
-    private lateinit var toaster: Toaster // handle toasting message
+    // Firebase and user data
+    private val currentUser = FirebaseAuthService.getCurrentUser()
+    private lateinit var toaster: Toaster
 
-    // on fragment creation inflate the fragment
+    // Inflate the fragment layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(TAG, "onCreateView: inflating fragment layout")
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
+        // Initialize views
         nameDisplay = view.findViewById(R.id.name_input_txt)
         surnameDisplay = view.findViewById(R.id.surname_input_txt)
         emailDisplay = view.findViewById(R.id.email_input_txt)
 
-        val notiDisplay = view?.findViewById<Switch>(R.id.switch_notifications)
-        val themeDisplay = view?.findViewById<Switch>(R.id.switch_theme)
-        val langDisplay = view?.findViewById<Switch>(R.id.switch_language)
+        val notiDisplay = view.findViewById<Switch>(R.id.switch_notifications)
+        val themeDisplay = view.findViewById<Switch>(R.id.switch_theme)
+        val langDisplay = view.findViewById<Switch>(R.id.switch_language)
 
-        toaster =  Toaster(this)
+        toaster = Toaster(this)
         toaster.showToast(UserManager.currentUser?.email.toString())
+        Log.d(TAG, "onCreateView: Toaster initialized and toast displayed")
 
+        // Populate user data if available
         if (currentUser != null) {
+            Log.d(TAG, "onCreateView: Current user found, populating data")
             val firstName = UserManager.currentUser?.firstName ?: "N/A"
             val lastName = UserManager.currentUser?.lastName ?: "N/A"
             val email = UserManager.currentUser?.email ?: "N/A"
@@ -75,156 +83,159 @@ class SettingsFragment : Fragment() {
             val themeOption = UserManager.currentUser?.darkModeEnabled ?: false
             val langOption = UserManager.currentUser?.language ?: "en"
 
-            // Use the retrieved data
+            // Set user data to views
             nameDisplay.text = firstName
             surnameDisplay.text = lastName
             emailDisplay.text = email
 
             notiDisplay?.isChecked = notiOption
             themeDisplay?.isChecked = themeOption
-            if (langOption == 0)
-            {
-                langDisplay?.isChecked = true
-            }
-            else
-            {
-                langDisplay?.isChecked = false
-            }
+            langDisplay?.isChecked = langOption == 0
+
+            Log.d(TAG, "onCreateView: User data populated")
+        } else {
+            Log.d(TAG, "onCreateView: No current user found")
         }
-        // inflate the layout for this fragment
+
         return view
     }
 
-    // when the view is created bind the register TextView to its object
-    // reference and handle oncClick event
+    // Bind and set up event handlers for the views
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d(TAG, "onViewCreated: View created and initializing components")
 
-        // Initialize Retrofit for the API
+        // Initialize Retrofit for fetching advice
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.adviceslip.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val adviceApiService = retrofit.create(AdviceApiService::class.java)
-
-        // Fetch the random advice when fragment is opened
         fetchRandomAdvice(adviceApiService)
 
-
-        val userId = UserManager.currentUser?.userId
-
+        // Bind views
         notiText = view.findViewById(R.id.noti_txt)
         themeText = view.findViewById(R.id.theme_text)
         langText = view.findViewById(R.id.lang_text)
 
         backButton = view.findViewById(R.id.iv_backBtn)
         backButton.setOnClickListener {
+            Log.d(TAG, "Back button clicked, navigating back")
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        //bind reference object to fragment xml component
         logoutButton = view.findViewById(R.id.btn_logout)
-        // handle onClick event
         logoutButton.setOnClickListener {
-            // show a confirmation dialog
-            AlertDialog.Builder(requireContext())
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to log out?")
-                .setPositiveButton("Yes") { dialog, which ->
-                    // if the user confirms, navigate to the LoginFragment
-                    FirebaseAuthService.logout()
-                    NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
-                }
-                .setNegativeButton("No") { dialog, which ->
-                    // if the user cancels, just dismiss the dialog
-                    dialog.dismiss()
-                }
-                .show()
+            Log.d(TAG, "Logout button clicked, showing confirmation dialog")
+            showLogoutConfirmation()
         }
 
-        //bind reference object to fragment xml component
         deleteButton = view.findViewById(R.id.btn_delete_account)
-        // handle onClick event
         deleteButton.setOnClickListener {
-            // show a confirmation dialog
-            AlertDialog.Builder(requireContext())
-                .setTitle("Delete")
-                .setMessage("Are you sure you want to delete your account?")
-                .setPositiveButton("Yes") { dialog, which ->
-                    // if the user confirms, navigate to the LoginFragment
-                    NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
-                }
-                .setNegativeButton("No") { dialog, which ->
-                    // if the user cancels, just dismiss the dialog
-                    dialog.dismiss()
-                }
-                .show()
+            Log.d(TAG, "Delete button clicked, showing confirmation dialog")
+            showDeleteConfirmation()
         }
 
-        // Set up Firestore and FirebaseAuth instances
+        // Firestore and Firebase Auth setup
         val db = FirebaseFirestore.getInstance()
-        val auth = FirebaseAuth.getInstance()
+        val userId = UserManager.currentUser?.userId
+        Log.d(TAG, "onViewCreated: Firebase Firestore and Auth initialized")
 
-        //--------Switch Handling-------//
-        //notifications
-        notiSwitch = view.findViewById(R.id.switch_notifications)
+        // Set up switch listeners
+        setupSwitchListeners(db, userId)
+    }
+
+    private fun setupSwitchListeners(db: FirebaseFirestore, userId: String?) {
+        Log.d(TAG, "Setting up switch listeners")
+
+        // Notifications switch
+        notiSwitch = view?.findViewById(R.id.switch_notifications)!!
         notiSwitch.setOnClickListener {
-            if (notiSwitch.isChecked) {
-                toaster.showToast("Notifications: Turned On.")
-                notiText.text = getString(R.string.noti_on_lbl)
-                UserManager.currentUser?.notificationsEnabled = true
-                val userRef = userId?.let { it1 -> db.collection("users").document(it1) }
-                if (userRef != null) {
-                    userRef.update("notificationsEnabled", true)
-                }
-            } else {
-                toaster.showToast("Notifications: Turned Off.")
-                notiText.text = getString(R.string.noti_off_lbl)
-                UserManager.currentUser?.notificationsEnabled = false
-                val userRef = userId?.let { it1 -> db.collection("users").document(it1) }
-                if (userRef != null) {
-                    userRef.update("notificationsEnabled", false)
-                }
-            }
+            Log.d(TAG, "Notifications switch toggled")
+            handleNotificationSwitch(db, userId)
         }
-        //theme
-        themeSwitch = view.findViewById(R.id.switch_theme)
+
+        // Theme switch
+        themeSwitch = view?.findViewById(R.id.switch_theme)!!
         themeSwitch.setOnClickListener {
-            if (themeSwitch.isChecked) {
-                toaster.showToast("Theme: Dark Mode Coming Soon...")
-                themeText.text = getString(R.string.theme_dark_lbl)
-                UserManager.currentUser?.darkModeEnabled = true
-            } else {
-                toaster.showToast("Theme: Light On.")
-                themeText.text = getString(R.string.theme_light_lbl)
-                UserManager.currentUser?.darkModeEnabled = false
-            }
+            Log.d(TAG, "Theme switch toggled")
+            handleThemeSwitch()
         }
-        //language
-        langSwitch = view.findViewById(R.id.switch_language)
+
+        // Language switch
+        langSwitch = view?.findViewById(R.id.switch_language)!!
         langSwitch.setOnClickListener {
-            if (langSwitch.isChecked) {
-                // Set language to English
-                toaster.showToast("Language: English.")
-                langText.text = getString(R.string.language_eng_lbl)
-                UserManager.currentUser?.language = 0
-                setAppLocale("default", requireContext())
-                requireActivity().recreate()
-            } else {
-                // Set language to Afrikaans
-                toaster.showToast("Taal: Afrikaans.")
-                langText.text = getString(R.string.language_afr_lbl)
-                UserManager.currentUser?.language = 1
-                setAppLocale("af", requireContext())
-                requireActivity().recreate()
-            }
+            Log.d(TAG, "Language switch toggled")
+            handleLanguageSwitch()
         }
     }
 
-    //Language Selector Method
-    fun setAppLocale(language: String, context: Context) {
+    private fun handleNotificationSwitch(db: FirebaseFirestore, userId: String?) {
+        val isChecked = notiSwitch.isChecked
+        toaster.showToast(if (isChecked) "Notifications: Turned On." else "Notifications: Turned Off.")
+        notiText.text = if (isChecked) getString(R.string.noti_on_lbl) else getString(R.string.noti_off_lbl)
+        UserManager.currentUser?.notificationsEnabled = isChecked
+
+        userId?.let { id ->
+            db.collection("users").document(id).update("notificationsEnabled", isChecked)
+            Log.d(TAG, "Notification setting updated to $isChecked in Firestore")
+        }
+    }
+
+    private fun handleThemeSwitch() {
+        val isChecked = themeSwitch.isChecked
+        toaster.showToast(if (isChecked) "Theme: Dark Mode Coming Soon..." else "Theme: Light On.")
+        themeText.text = if (isChecked) getString(R.string.theme_dark_lbl) else getString(R.string.theme_light_lbl)
+        UserManager.currentUser?.darkModeEnabled = isChecked
+        Log.d(TAG, "Theme setting updated: ${if (isChecked) "Dark Mode" else "Light Mode"}")
+    }
+
+    private fun handleLanguageSwitch() {
+        val isChecked = langSwitch.isChecked
+        toaster.showToast(if (isChecked) "Language: English." else "Taal: Afrikaans.")
+        langText.text = if (isChecked) getString(R.string.language_eng_lbl) else getString(R.string.language_afr_lbl)
+        UserManager.currentUser?.language = if (isChecked) 0 else 1
+        setAppLocale(if (isChecked) "default" else "af", requireContext())
+        requireActivity().recreate()
+        Log.d(TAG, "Language setting updated: ${if (isChecked) "English" else "Afrikaans"}")
+    }
+
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yes") { _, _ ->
+                FirebaseAuthService.logout()
+                NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
+                Log.d(TAG, "User logged out and navigated to LoginFragment")
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+                Log.d(TAG, "Logout cancelled")
+            }
+            .show()
+    }
+
+    private fun showDeleteConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete")
+            .setMessage("Are you sure you want to delete your account?")
+            .setPositiveButton("Yes") { _, _ ->
+                NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
+                Log.d(TAG, "Account deletion confirmed, navigating to LoginFragment")
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+                Log.d(TAG, "Account deletion cancelled")
+            }
+            .show()
+    }
+
+    // Set the app's language
+    private fun setAppLocale(language: String, context: Context) {
+        Log.d(TAG, "Setting app locale to $language")
         val locale = Locale(language)
         Locale.setDefault(locale)
         val config = context.resources.configuration
@@ -233,19 +244,19 @@ class SettingsFragment : Fragment() {
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
+    // Fetch random advice from API
     private fun fetchRandomAdvice(adviceApiService: AdviceApiService) {
+        Log.d(TAG, "Fetching random advice from API")
         adviceApiService.getRandomAdvice().enqueue(object : Callback<AdviceResponse> {
             override fun onResponse(call: Call<AdviceResponse>, response: Response<AdviceResponse>) {
-                if (response.isSuccessful) {
-                    val advice = response.body()?.slip?.advice
-                    view?.findViewById<TextView>(R.id.adviceTextView)?.text = advice
-                } else {
-                    view?.findViewById<TextView>(R.id.adviceTextView)?.text = "If they're old enough to pee,, they're old enough for me. You have no internet connection by the way."
-                }
+                val adviceText = response.body()?.slip?.advice ?: "No advice available."
+                view?.findViewById<TextView>(R.id.adviceTextView)?.text = adviceText
+                Log.d(TAG, "Random advice fetched successfully: $adviceText")
             }
 
             override fun onFailure(call: Call<AdviceResponse>, t: Throwable) {
-                view?.findViewById<TextView>(R.id.adviceTextView)?.text = "If they're old enough to pee, they're old enough for me. \nYou have no internet connection by the way."
+                view?.findViewById<TextView>(R.id.adviceTextView)?.text = "Failed to fetch advice. Check your connection."
+                Log.e(TAG, "Failed to fetch random advice: ${t.message}")
             }
         })
     }
