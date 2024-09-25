@@ -28,19 +28,19 @@ class LoginFragment : Fragment() {
 
     // setup service instances
     private lateinit var toaster: Toaster // handle toasting message
-    private lateinit var googleAccountService: GoogleAccountService
-    private lateinit var biometricService: BiometricService
-    private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private lateinit var googleAccountService: GoogleAccountService // handle google sign-on
+    private lateinit var biometricService: BiometricService // handle biometric re-login
+    private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> // handle results of google sign-on request
         googleAccountService.handleSignInResult(result.resultCode, result.data, { user ->
             googleAccountService.checkIfUserExistsInFirestore(user, {
-                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+                NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container) // navigate to CounterViewFragment
                 toaster.showToast(getString(R.string.login_successful))
             }, { error ->
                 toaster.showToast("Error: $error")
-                FirebaseAuthService.logout()
+                FirebaseAuthService.logout() // force log user out
             })
         }, { error ->
-            toaster.showToast(error)
+            toaster.showToast(error) // error in google sign-on
         })
     }
 
@@ -62,11 +62,11 @@ class LoginFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
-    // when the view is created bind the register TextView to its object
-    // reference and handle oncClick event
+    // when the view is created establish service initialisation adn setup UI
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // intalisise the google sign-
         googleAccountService = GoogleAccountService(requireContext())
         googleAccountService.setupGoogleSignIn(getString(R.string.default_web_client_id))
         biometricService = BiometricService(requireActivity())
