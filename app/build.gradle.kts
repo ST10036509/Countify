@@ -62,30 +62,41 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
-    implementation(libs.google.play.services.auth)
-    // Firebase Authentication
-    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
 
-    implementation("com.google.firebase:firebase-auth")
-
-    implementation("androidx.biometric:biometric:1.2.0-alpha05")
 
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     implementation(libs.androidx.cardview)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
+
+    // google sso
+    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.google.play.services.auth)
+
+    // biometrics
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // testing
     testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
+    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("org.robolectric:robolectric:4.7") // For Android unit testing
 }
