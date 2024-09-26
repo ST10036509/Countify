@@ -62,9 +62,7 @@ class CounterAdapter(private val counterList: List<CounterModel>) :
         }
     }
 
-    /**
-     * Save the updated counter value to Firestore
-     */
+
     private fun saveUpdatedCounterValueToFirestore(counter: CounterModel) {
         val counterDocumentRef = counter.counterId?.let {
             FirebaseFirestore.getInstance()
