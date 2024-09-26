@@ -5,6 +5,7 @@ import st10036509.countify.service.FirestoreService
 
 data class CounterModel(
     val userId: String = "",
+    val counterId: String? = null,
     var name: String = "",
     var startValue: Int = 0, // initial value of the counter
     var changeValue: Int = 1, // the value which the counter will change by on inc/dec
