@@ -148,18 +148,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/decrement_start_value"
-                android:layout_width="48dp"
+                android:layout_width="110dp"
                 android:layout_height="48dp"
+                android:layout_gravity="left"
                 android:layout_marginEnd="16dp"
-                android:text="−"
                 android:background="@android:color/transparent"
-                android:textColor="#000000"
+                android:text="−"
+                android:textColor="@color/button_gray"
                 android:textSize="24sp" />
 
             <TextView
@@ -168,18 +170,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="@color/button_gray"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/increment_start_value"
-                android:layout_width="48dp"
+                android:layout_width="165dp"
                 android:layout_height="48dp"
+                android:layout_gravity="right"
                 android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
                 android:text="+"
-                android:textColor="#000000"
+                android:textColor="@color/button_gray"
                 android:textSize="24sp" />
         </LinearLayout>
 
@@ -196,18 +198,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/decrement_increment_value_button"
-                android:layout_width="48dp"
+                android:layout_width="110dp"
                 android:layout_height="48dp"
+                android:layout_gravity="left"
                 android:layout_marginEnd="16dp"
                 android:background="@android:color/transparent"
                 android:text="−"
-                android:textColor="#000000"
+                android:textColor="@color/button_gray"
                 android:textSize="24sp" />
 
             <TextView
@@ -216,18 +220,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="1"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="@color/button_gray"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/increment_increment_value_button"
-                android:layout_width="48dp"
+                android:layout_width="165dp"
                 android:layout_height="48dp"
+                android:layout_gravity="right"
                 android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
                 android:text="+"
-                android:textColor="#000000"
+                android:textColor="@color/button_gray"
                 android:textSize="24sp" />
         </LinearLayout>
     </LinearLayout>

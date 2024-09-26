@@ -1,5 +1,8 @@
 package st10036509.countify.user_interface.counter
 
+
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,8 +19,10 @@ import st10036509.countify.R
 import st10036509.countify.adapter.CounterAdapter
 import st10036509.countify.model.CounterModel
 import st10036509.countify.service.FirebaseAuthService
+import st10036509.countify.model.UserManager
 import st10036509.countify.service.NavigationService
 import st10036509.countify.user_interface.account.SettingsFragment
+import java.util.Locale
 
 class CounterViewFragment : Fragment() {
 
@@ -40,9 +45,21 @@ class CounterViewFragment : Fragment() {
         currentUser = FirebaseAuthService.getCurrentUser()
 
         fetchCountersFromFirestore()
+        setAppLocale(if (UserManager.currentUser?.language == 1) "af" else "default", requireContext())
         return view
     }
 
+
+    // Set the app's language
+    private fun setAppLocale(language: String, context: Context) {
+        Log.d(TAG, "Setting app locale to $language")
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

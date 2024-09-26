@@ -5,8 +5,8 @@ data class UserModel(
     var firstName: String = "",
     var lastName: String = "",
     var email: String = "",
-    var phoneNumber: String = "",
     var notificationsEnabled: Boolean = true, // true = receive notifications || false = don't resized notifications
     var darkModeEnabled: Boolean = false, // false = lightMode || true = darkMode
-    var language: String = "English" // Afrikaans or English
+    var language: Int = 0, // English = 0 || Afrikaans = 1
+    var counters: List<CounterModel> = listOf() // list of counters
 )
