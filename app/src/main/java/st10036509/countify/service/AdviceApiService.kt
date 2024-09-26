@@ -1,4 +1,4 @@
-package st10036509.countify
+package st10036509.countify.service
 
 import retrofit2.Call
 import retrofit2.http.GET
