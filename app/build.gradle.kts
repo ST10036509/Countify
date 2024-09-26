@@ -62,6 +62,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
+
+
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     implementation(libs.androidx.cardview)
