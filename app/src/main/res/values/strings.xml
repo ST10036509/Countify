@@ -82,6 +82,6 @@
     </string-array>
 
     <!-- Counter Viewing Page -->
-    <string name="since">Since: </string>
+    <string name="since" translatable="false">Since: </string>
 
 </resources>

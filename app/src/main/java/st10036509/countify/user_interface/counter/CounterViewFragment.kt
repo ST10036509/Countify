@@ -1,15 +1,19 @@
 package st10036509.countify.user_interface.counter
 
-
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +26,7 @@ import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.model.UserManager
 import st10036509.countify.service.NavigationService
 import st10036509.countify.user_interface.account.SettingsFragment
+import st10036509.countify.user_interface.counter.CounterCreationFragment
 import java.util.Locale
 
 class CounterViewFragment : Fragment() {
@@ -29,7 +34,7 @@ class CounterViewFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var counterAdapter: CounterAdapter
     private lateinit var addCounterButton: FloatingActionButton
-    private lateinit var  settingsButton: ImageView
+    private lateinit var settingsButton: ImageView
     private val firestore = FirebaseFirestore.getInstance()
     private var counterList: MutableList<CounterModel> = mutableListOf()
     private var currentUser: FirebaseUser? = null
@@ -46,9 +51,12 @@ class CounterViewFragment : Fragment() {
 
         fetchCountersFromFirestore()
         setAppLocale(if (UserManager.currentUser?.language == 1) "af" else "default", requireContext())
+
+        // Set up ItemTouchHelper for swipe-to-delete functionality
+        setupSwipeToDelete()
+
         return view
     }
-
 
     // Set the app's language
     private fun setAppLocale(language: String, context: Context) {
@@ -74,11 +82,11 @@ class CounterViewFragment : Fragment() {
         settingsButton.setOnClickListener{
             NavigationService.navigateToFragment(SettingsFragment(), R.id.fragment_container)
         }
+
     }
 
     private fun fetchCountersFromFirestore() {
-
-        val userID = currentUser?.uid;
+        val userID = currentUser?.uid
         firestore.collection("counters_tests")
             .whereEqualTo("userId", userID)
             .get()
@@ -104,5 +112,73 @@ class CounterViewFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
+    }
+
+    private fun setupSwipeToDelete() {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val counterToDelete = counterList[position]
+
+                // Remove from Firestore
+                counterToDelete.counterId?.let {
+                    firestore.collection("counters_tests").document(it)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Counter successfully deleted!")
+                            counterList.removeAt(position)
+                            counterAdapter.notifyItemRemoved(position)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error deleting counter", e)
+                        }
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
+                // Draw background and icon while swiping
+                val itemView = viewHolder.itemView
+                val background = ColorDrawable(Color.RED)
+                background.setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
+                background.draw(c)
+
+                val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete_icon)
+                val iconMargin = (itemView.height - deleteIcon!!.intrinsicHeight) / 2
+                val iconTop = itemView.top + iconMargin
+                val iconBottom = iconTop + deleteIcon.intrinsicHeight
+
+                val iconLeft = itemView.right - iconMargin - deleteIcon.intrinsicWidth
+                val iconRight = itemView.right - iconMargin
+                deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+
+                deleteIcon.draw(c)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 }

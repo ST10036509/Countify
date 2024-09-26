@@ -70,6 +70,8 @@ dependencies {
 
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
 
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     implementation(libs.androidx.cardview)
