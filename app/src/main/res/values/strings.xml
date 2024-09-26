@@ -81,4 +81,7 @@
         <item>Yearly</item>
     </string-array>
 
+    <!-- Counter Viewing Page -->
+    <string name="since">Since: </string>
+
 </resources>

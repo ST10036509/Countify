@@ -51,18 +51,19 @@
             android:id="@+id/iv_settingsButton"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_gravity="right"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/settings_icon" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
-        android:layout_width="370dp"
+        android:id="@+id/ll_divider"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/button_gray"
         android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
@@ -75,14 +76,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_itemsView"
         android:layout_width="match_parent"
-        android:layout_height="627dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:paddingBottom="200dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
+        app:layout_constraintTop_toBottomOf="@+id/ll_divider"
         app:layout_constraintVertical_bias="0.0" />
 
 
