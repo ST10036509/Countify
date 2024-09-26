@@ -11,7 +11,6 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import st10036509.countify.R
 import st10036509.countify.model.UserManager
@@ -24,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import st10036509.countify.AdviceApiService
+import st10036509.countify.service.AdviceApiService
 import st10036509.countify.model.AdviceResponse
 
 class SettingsFragment : Fragment() {
