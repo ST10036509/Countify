@@ -71,4 +71,7 @@
 
     <string name="return_">RETURN</string>
 
+    <!-- Counter Viewing Page -->
+    <string name="since">Since: </string>
+
 </resources>
