@@ -66,20 +66,24 @@ class CounterAdapter(private val counterList: List<CounterModel>) :
      * Save the updated counter value to Firestore
      */
     private fun saveUpdatedCounterValueToFirestore(counter: CounterModel) {
-        val counterDocumentRef = FirebaseFirestore.getInstance()
-            .collection("counters_tests")
-            .document(counter.counterId)
+        val counterDocumentRef = counter.counterId?.let {
+            FirebaseFirestore.getInstance()
+                .collection("counters_tests")
+                .document(it)
+        }
 
         // Update the current value in Firestore
-        counterDocumentRef.update("currentValue", counter.currentValue)
-            .addOnSuccessListener {
-                // Successfully updated Firestore
-                Log.d("Firestore", "Counter updated successfully")
-            }
-            .addOnFailureListener { e ->
-                // Failed to update Firestore
-                Log.w("Firestore", "Error updating counter", e)
-            }
+        if (counterDocumentRef != null) {
+            counterDocumentRef.update("currentValue", counter.currentValue)
+                .addOnSuccessListener {
+                    // Successfully updated Firestore
+                    Log.d("Firestore", "Counter updated successfully")
+                }
+                .addOnFailureListener { e ->
+                    // Failed to update Firestore
+                    Log.w("Firestore", "Error updating counter", e)
+                }
+        }
     }
 
 
