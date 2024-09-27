@@ -80,7 +80,7 @@ class CounterCreationFragment : Fragment() {
         settingsButton = view.findViewById(R.id.iv_settingsIcon)
 
         // Set up the Create button
-        val createButton: Button = view.findViewById(R.id.btn_create)
+        val createButton: Button = view.findViewById(R.id.btn_Create)
         createButton.setOnClickListener {
             if (validateUserTitleInput()) {
                 setCounterDetails()
