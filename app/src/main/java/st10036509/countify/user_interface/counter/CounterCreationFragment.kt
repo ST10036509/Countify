@@ -3,6 +3,7 @@ package st10036509.countify.user_interface.counter
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,6 +116,7 @@ class CounterCreationFragment : Fragment() {
         view.findViewById<Button>(R.id.decrement_increment_value_button).setOnClickListener {
             decrementIncrementValue()
         }
+        Log.i("onCreate","View createds")
 
         return view
     }
@@ -153,7 +155,7 @@ class CounterCreationFragment : Fragment() {
             if (isTitleNull(title)) {
                 throw IllegalArgumentException("Title cannot be empty.")
             }
-            Toast.makeText(requireContext(), "All inputs are valid.", Toast.LENGTH_SHORT).show()
+            Log.i("validateUserTitleInput","All inputs are valid")
             true
         } catch (e: IllegalArgumentException) {
             Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
@@ -166,6 +168,7 @@ class CounterCreationFragment : Fragment() {
         start = startValue.text.toString().toIntOrNull() ?: 0
         increment = incrementValue.text.toString().toIntOrNull() ?: 0
         timeStamp = getCurrentTimestamp()  // Capture the current timestamp
+        Log.i("setCounterDetails","Counter details are set locally in class")
     }
 
     private fun addCounterToDatabase() {
@@ -186,8 +189,10 @@ class CounterCreationFragment : Fragment() {
         FirestoreService.addCounter(counter) { success, error ->
             if (success) {
                 Toast.makeText(requireContext(), "Counter added successfully!", Toast.LENGTH_SHORT).show()
+                Log.i("addCounterToDatabase","Counter added to databse")
             } else {
                 Toast.makeText(requireContext(), "Error adding counter: $error", Toast.LENGTH_SHORT).show()
+                Log.i("addCounterToDatabase","Counter failed to add to databases")
             }
         }
     }
