@@ -127,12 +127,12 @@ class CounterCreationFragment : Fragment() {
         return System.currentTimeMillis()
     }
 
-    private fun incrementStartValue() {
+    fun incrementStartValue() {
         start++
         startValue.text = start.toString()
     }
 
-    private fun decrementStartValue() {
+    fun decrementStartValue() {
         if (isMoreThanZero(start)) {
             start--
             startValue.text = start.toString()
@@ -151,7 +151,7 @@ class CounterCreationFragment : Fragment() {
         }
     }
 
-    private fun validateUserTitleInput(): Boolean {
+    fun validateUserTitleInput(): Boolean {
         return try {
             title = titleInput.text.toString()
             if (isTitleNull(title)) {
