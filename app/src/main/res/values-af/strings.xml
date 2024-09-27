@@ -41,7 +41,12 @@
     <string name="inc_val">VERHOOGWAARDE:</string>
     <string name="create">SKEP</string>
     <string name="return_">TERUG</string>
-
+    <string name="counter_pull_failed">Kan nie inligting laai nie. Probeer asseblief weer</string>
+    <string name="counter_pull_successful">Alle tellers is suksesvol gehaal</string>
+    <string name="counter_delete_failed">Teller kon nie uitgevee word nie. Probeer asseblief weer</string>
+    <string name="counter_update_failed">Teller kon nie opgedateer word nie. Probeer asseblief weer</string>
+    <string name="counter_delete_successful">Teller is uitgevee</string>
+    <string name="counter_update_successful">Waarde opgedatee</string>
     <!-- Spinner Values -->
     <string-array name="repeat_options">
         <item>Daagliks</item>

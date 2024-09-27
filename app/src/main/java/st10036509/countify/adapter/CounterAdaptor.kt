@@ -1,21 +1,31 @@
 package st10036509.countify.adapter
 
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getString
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import st10036509.countify.R
 import st10036509.countify.model.CounterModel
+import st10036509.countify.service.Toaster
+import st10036509.countify.user_interface.counter.CounterViewFragment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CounterAdapter(private val counterList: List<CounterModel>) :
+class CounterAdapter(private val counterList: List<CounterModel>, private val fragment: Fragment) :
     RecyclerView.Adapter<CounterAdapter.CounterViewHolder>() {
+
+        private var toaster: Toaster
+    init {
+        toaster = Toaster(fragment)
+    }
 
     class CounterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvItemName: TextView = itemView.findViewById(R.id.tv_itemName)
@@ -70,17 +80,12 @@ class CounterAdapter(private val counterList: List<CounterModel>) :
                 .document(it)
         }
 
-        // Update the current value in Firestore
-        if (counterDocumentRef != null) {
-            counterDocumentRef.update("currentValue", counter.currentValue)
-                .addOnSuccessListener {
-                    // Successfully updated Firestore
-                    Log.d("Firestore", "Counter updated successfully")
-                }
-                .addOnFailureListener { e ->
-                    // Failed to update Firestore
-                    Log.w("Firestore", "Error updating counter", e)
-                }
+        counterDocumentRef?.update("currentValue", counter.currentValue)?.addOnSuccessListener {
+            // Successfully updated Firestore, using getString from fragment context
+            toaster.showToast(fragment.getString(R.string.counter_update_successful))
+        }?.addOnFailureListener { e ->
+            // Failed to update Firestore
+            toaster.showToast(fragment.getString((R.string.counter_update_failed)))
         }
     }
 
