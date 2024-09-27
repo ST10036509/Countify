@@ -22,12 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import st10036509.countify.R
 import st10036509.countify.adapter.CounterAdapter
 import st10036509.countify.model.CounterModel
-import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.model.UserManager
+import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.account.SettingsFragment
-import st10036509.countify.user_interface.counter.CounterCreationFragment
 import java.util.Locale
 
 class CounterViewFragment : Fragment() {
@@ -113,7 +112,7 @@ class CounterViewFragment : Fragment() {
                 // Setup the adapter with the fetched counters
                 counterAdapter = CounterAdapter(counterList, this)
                 recyclerView.adapter = counterAdapter
-                toaster.showToast(getString(R.string.counter_pull_successful))
+                //.showToast(getString(R.string.counter_pull_successful))
             }
             .addOnFailureListener { exception ->
                 toaster.showToast(getString((R.string.counter_pull_failed)))

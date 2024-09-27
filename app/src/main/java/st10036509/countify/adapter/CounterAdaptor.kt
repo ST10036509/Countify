@@ -1,20 +1,17 @@
 package st10036509.countify.adapter
 
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getString
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import st10036509.countify.R
 import st10036509.countify.model.CounterModel
 import st10036509.countify.service.Toaster
-import st10036509.countify.user_interface.counter.CounterViewFragment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,7 +79,7 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
 
         counterDocumentRef?.update("currentValue", counter.currentValue)?.addOnSuccessListener {
             // Successfully updated Firestore, using getString from fragment context
-            toaster.showToast(fragment.getString(R.string.counter_update_successful))
+            //toaster.showToast(fragment.getString(R.string.counter_update_successful))
         }?.addOnFailureListener { e ->
             // Failed to update Firestore
             toaster.showToast(fragment.getString((R.string.counter_update_failed)))

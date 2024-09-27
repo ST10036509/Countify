@@ -68,7 +68,7 @@ class SettingsFragment : Fragment() {
         val langDisplay = view.findViewById<Switch>(R.id.switch_language)
 
         toaster = Toaster(this)
-        toaster.showToast(UserManager.currentUser?.email.toString())
+        //toaster.showToast(UserManager.currentUser?.email.toString())
         Log.d(TAG, "onCreateView: Toaster initialized and toast displayed")
 
         // Populate user data if available
