@@ -15,6 +15,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import st10036509.countify.R
@@ -80,7 +81,7 @@ class CounterCreationFragment : Fragment() {
         settingsButton = view.findViewById(R.id.iv_settingsIcon)
 
         // Set up the Create button
-        val createButton: Button = view.findViewById(R.id.btn_Create)
+        val createButton: CardView = view.findViewById(R.id.btn_Create)
         createButton.setOnClickListener {
             if (validateUserTitleInput()) {
                 setCounterDetails()
@@ -89,10 +90,11 @@ class CounterCreationFragment : Fragment() {
         }
 
         // Set up the Return button
-        val returnButton: Button = view.findViewById(R.id.btn_return)
+        val returnButton: CardView = view.findViewById(R.id.btn_return)
         returnButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
+
 
         // Settings Icon click
         settingsButton.setOnClickListener {
