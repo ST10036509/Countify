@@ -12,19 +12,19 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import st10036509.countify.R
+import st10036509.countify.model.AdviceResponse
 import st10036509.countify.model.UserManager
+import st10036509.countify.service.AdviceApiService
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import java.util.Locale
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import st10036509.countify.service.AdviceApiService
-import st10036509.countify.model.AdviceResponse
 
 class SettingsFragment : Fragment() {
 
@@ -134,7 +134,8 @@ class SettingsFragment : Fragment() {
         deleteButton = view.findViewById(R.id.btn_delete_account)
         deleteButton.setOnClickListener {
             Log.d(TAG, "Delete button clicked, showing confirmation dialog")
-            showDeleteConfirmation()
+            //showDeleteConfirmation()
+            toaster.showToast("Account Deletion Coming Soon!")
         }
 
         // Firestore and Firebase Auth setup
