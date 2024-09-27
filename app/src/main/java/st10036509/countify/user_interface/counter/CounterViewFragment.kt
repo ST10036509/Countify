@@ -25,6 +25,7 @@ import st10036509.countify.model.CounterModel
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.model.UserManager
 import st10036509.countify.service.NavigationService
+import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.account.SettingsFragment
 import st10036509.countify.user_interface.counter.CounterCreationFragment
 import java.util.Locale
@@ -35,6 +36,7 @@ class CounterViewFragment : Fragment() {
     private lateinit var counterAdapter: CounterAdapter
     private lateinit var addCounterButton: FloatingActionButton
     private lateinit var settingsButton: ImageView
+    private lateinit var toaster: Toaster
     private val firestore = FirebaseFirestore.getInstance()
     private var counterList: MutableList<CounterModel> = mutableListOf()
     private var currentUser: FirebaseUser? = null
@@ -54,6 +56,9 @@ class CounterViewFragment : Fragment() {
 
         // Set up ItemTouchHelper for swipe-to-delete functionality
         setupSwipeToDelete()
+
+        //Initializing toaster
+        toaster = Toaster(this)
 
         return view
     }
@@ -106,11 +111,12 @@ class CounterViewFragment : Fragment() {
                     counterList.add(counter)
                 }
                 // Setup the adapter with the fetched counters
-                counterAdapter = CounterAdapter(counterList)
+                counterAdapter = CounterAdapter(counterList, this)
                 recyclerView.adapter = counterAdapter
+                toaster.showToast(getString(R.string.counter_pull_successful))
             }
             .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error getting documents: ", exception)
+                toaster.showToast(getString((R.string.counter_pull_failed)))
             }
     }
 
@@ -133,12 +139,12 @@ class CounterViewFragment : Fragment() {
                     firestore.collection("counters_tests").document(it)
                         .delete()
                         .addOnSuccessListener {
-                            Log.d(TAG, "Counter successfully deleted!")
+                            toaster.showToast(getString(R.string.counter_delete_successful))
                             counterList.removeAt(position)
                             counterAdapter.notifyItemRemoved(position)
                         }
                         .addOnFailureListener { e ->
-                            Log.w(TAG, "Error deleting counter", e)
+                            toaster.showToast(getString(R.string.counter_delete_failed))
                         }
                 }
             }

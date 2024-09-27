@@ -28,9 +28,15 @@
             <string name="weak_password_error">Password is too weak. Ensure it has at least ONE Capital,
                                                    Digit, and Special Symbol and is 8 characters long</string>
             <string name="registration_failed_header">Registration failed:</string>
+            <string name="counter_pull_failed">Failed to retrieve counters. Please try again</string>
+            <string name="counter_delete_failed">Counter has been deleted</string>
+            <string name="counter_update_failed">Value updated</string>
             <!-- SUCCESS MESSAGES -->
             <string name="login_successful">Logged in successfully!</string>
             <string name="registration_successful">Registration successfully!</string>
+            <string name="counter_pull_successful">Fetched all counters successfully!</string>
+            <string name="counter_delete_successful">Counter has been deleted</string>
+            <string name="counter_update_successful">Value updated</string>
 
     <!-- Settings Page -->
     <string name="settings_header">Account Details</string>
