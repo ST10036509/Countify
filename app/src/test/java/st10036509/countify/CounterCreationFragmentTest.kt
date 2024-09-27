@@ -36,8 +36,7 @@ class CounterCreationFragmentTest {
         Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
         Mockito.`when`(mockFirebaseUser.uid).thenReturn("testUserId")
 
-        // You can set the mocked FirebaseAuth as the instance in your FirebaseAuthService if needed
-        // FirebaseAuthService.setAuthInstance(mockFirebaseAuth)
+
     }
 
     @Test
@@ -49,7 +48,7 @@ class CounterCreationFragmentTest {
             val isValid = fragment.validateUserTitleInput()
 
             assert(!isValid)  // Expect validation to fail
-            // Here you can add further checks to ensure the correct Toast message was shown
+
         }
     }
 
@@ -80,7 +79,4 @@ class CounterCreationFragmentTest {
             assert(startValue.text.toString().toInt() == 0)  // Expect value to remain 0
         }
     }
-
-    // More tests can be added here, for example for incrementing values and adding counters to the database
-
 }
