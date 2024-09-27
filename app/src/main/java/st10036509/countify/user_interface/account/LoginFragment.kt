@@ -184,7 +184,7 @@ class LoginFragment : Fragment() {
     }
 
     // method to check if email and password are valid inputs
-    private fun areInputsValid(inputs: LoginInputs): Boolean {
+    public fun areInputsValid(inputs: LoginInputs): Boolean {
 
         Log.i("Login Fragment:", "Checking Input Validity")
         // pass inputs to mutable list

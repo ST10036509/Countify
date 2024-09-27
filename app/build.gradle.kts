@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     implementation(libs.androidx.cardview)
+    implementation(libs.androidx.junit.ktx)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -95,8 +96,10 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("org.mockito:mockito-core:3.12.4")
-    testImplementation("org.mockito:mockito-inline:3.12.4")
+    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.mockito:mockito-inline:5.5.0")
     androidTestImplementation("androidx.test:core:1.6.1")
     androidTestImplementation("org.robolectric:robolectric:4.7") // For Android unit testing
+    androidTestImplementation (libs.androidx.espresso.core)
+    testImplementation("androidx.fragment:fragment-testing:1.8.3")
 }

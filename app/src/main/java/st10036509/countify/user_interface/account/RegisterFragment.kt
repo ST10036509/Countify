@@ -35,7 +35,7 @@ import st10036509.countify.utils.toMutableListRegister
 
 class RegisterFragment: Fragment() {
     // setup service instances
-    private lateinit var toaster: Toaster // handle toasting message
+    lateinit var toaster: Toaster // handle toasting message
     private lateinit var googleAccountService: GoogleAccountService // handle google sign-on
     private val resultsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> // handle results of google sign-on request
         googleAccountService.handleSignInResult(result.resultCode, result.data, { user ->
@@ -156,7 +156,7 @@ class RegisterFragment: Fragment() {
         }
     }
 
-    private fun areInputsValid(inputs: RegisterInputs): Boolean {
+    fun areInputsValid(inputs: RegisterInputs): Boolean {
 
         Log.i("Register Fragment:", "Checking if Register Inputs Are Valid")
 
