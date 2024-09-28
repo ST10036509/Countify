@@ -91,7 +91,7 @@ class CounterViewFragment : Fragment() {
 
     private fun fetchCountersFromFirestore() {
         val userID = currentUser?.uid
-        firestore.collection("counters_tests")
+        firestore.collection("counter")
             .whereEqualTo("userId", userID)
             .get()
             .addOnSuccessListener { result ->
@@ -100,9 +100,8 @@ class CounterViewFragment : Fragment() {
                     val counter = CounterModel(
                         counterId = document.id,  // Assign the document ID
                         name = document.getString("name") ?: "",
-                        currentValue = document.getLong("currentValue")?.toInt() ?: 0,
-                        changeValue = document.getLong("incrementValue")?.toInt() ?: 1,
-                        startValue = document.getLong("startValue")?.toInt() ?: 0,
+                        changeValue = document.getLong("changeValue")?.toInt() ?: 0,
+                        count = document.getLong("count")?.toInt() ?: 1,
                         createdTimestamp = document.getLong("createdTimestamp") ?: 0L,
                         repetition = document.getString("repetition") ?: "",
                         userId = document.getString("userId") ?: ""
