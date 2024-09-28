@@ -91,7 +91,7 @@ class CounterViewFragment : Fragment() {
 
     private fun fetchCountersFromFirestore() {
         val userID = currentUser?.uid
-        firestore.collection("counter")
+        firestore.collection("counters")
             .whereEqualTo("userId", userID)
             .get()
             .addOnSuccessListener { result ->
@@ -100,7 +100,7 @@ class CounterViewFragment : Fragment() {
                     val counter = CounterModel(
                         counterId = document.id,  // Assign the document ID
                         name = document.getString("name") ?: "",
-                        changeValue = document.getLong("changeValue")?.toInt() ?: 0,
+                        changeValue = document.getLong("incrementValue")?.toInt() ?: 0,
                         count = document.getLong("count")?.toInt() ?: 1,
                         createdTimestamp = document.getLong("createdTimestamp") ?: 0L,
                         repetition = document.getString("repetition") ?: "",
@@ -134,7 +134,7 @@ class CounterViewFragment : Fragment() {
 
                 // Remove from Firestore
                 counterToDelete.counterId?.let {
-                    firestore.collection("counters_tests").document(it)
+                    firestore.collection("counters").document(it)
                         .delete()
                         .addOnSuccessListener {
                             toaster.showToast(getString(R.string.counter_delete_successful))

@@ -53,8 +53,8 @@
         <!-- Minus Button -->
         <ImageView
             android:id="@+id/iv_minusButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
             android:src="@drawable/minus_button_red" />
 
@@ -73,8 +73,8 @@
         <!-- Plus Button -->
         <ImageView
             android:id="@+id/iv_plusButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
             android:src="@drawable/plus_button_green" />
     </LinearLayout>

@@ -181,7 +181,7 @@ class CounterCreationFragment : Fragment() {
         val counter = CounterModel(
             userId = userId,
             name = title,
-            startValue = start,
+            count = start,
             changeValue = increment,
             repetition = repeat,
             createdTimestamp = getCurrentTimestamp() // Set the timestamp here
