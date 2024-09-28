@@ -61,11 +61,22 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
         holder.ivMinusButton.setOnClickListener {
             // Decrement the current counter value by its decrement value
             val updatedValue = currentCounter.count - currentCounter.changeValue
-            currentCounter.count = updatedValue
-            holder.tvCounter.text = updatedValue.toString()
 
-            // save updated value to firestore
-            saveUpdatedCounterValueToFirestore(currentCounter)
+            if (updatedValue > 0){
+                currentCounter.count = updatedValue
+                holder.tvCounter.text = updatedValue.toString()
+
+                // save updated value to firestore
+                saveUpdatedCounterValueToFirestore(currentCounter)
+            }
+            else if (currentCounter.count > 0){
+                currentCounter.count = 0
+                holder.tvCounter.text = "0"
+                saveUpdatedCounterValueToFirestore(currentCounter)
+
+            }else{
+                toaster.showToast(fragment.getString((R.string.counter_update_failed)))
+            }
         }
     }
 
@@ -73,11 +84,11 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
     private fun saveUpdatedCounterValueToFirestore(counter: CounterModel) {
         val counterDocumentRef = counter.counterId?.let {
             FirebaseFirestore.getInstance()
-                .collection("counters_tests")
+                .collection("counters")
                 .document(it)
         }
 
-        counterDocumentRef?.update("currentValue", counter.count)?.addOnSuccessListener {
+        counterDocumentRef?.update("count", counter.count)?.addOnSuccessListener {
             // Successfully updated Firestore, using getString from fragment context
             //toaster.showToast(fragment.getString(R.string.counter_update_successful))
         }?.addOnFailureListener { e ->
@@ -89,7 +100,7 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
 
     fun formatTimestampToDate(timestampInMillis: Long): String {
         val date = Date(timestampInMillis) //convert timestamp to date
-        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()) //setting the required format
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH) //setting the required format
         return sdf.format(date) //returning formatted date
     }
 

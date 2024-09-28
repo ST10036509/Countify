@@ -92,18 +92,17 @@ object FirestoreService {
         Log.i("Firestore Service:", "Adding Counter Document to Collection -  Counters")
         val counterData = hashMapOf(
             "createdTimestamp" to counter.createdTimestamp,
-            "currentValue" to counter.currentValue,
+            "count" to counter.count,
             "incrementValue" to counter.changeValue,
             "name" to counter.name,
             "repetition" to counter.repetition,
-            "startValue" to counter.startValue,
             "userId" to counter.userId
         )
 
         Log.i("Firestore Service:", "Counter Model Created")
 
         // add counter document to the firestore
-        addDocument("counters_tests", counterData) { success, error ->
+        addDocument("counters", counterData) { success, error ->
             if (success) {
                 Log.i("Firestore Service:", "Counter Document Creation Process Successful")
                 onComplete(true, null) // counter successfully added

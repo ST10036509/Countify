@@ -30,7 +30,7 @@
             <string name="registration_failed_header">Registration failed:</string>
             <string name="counter_pull_failed">Failed to retrieve counters. Please try again</string>
             <string name="counter_delete_failed">Counter has been deleted</string>
-            <string name="counter_update_failed">Value updated</string>
+            <string name="counter_update_failed">Value could not be updated. Please try again</string>
             <!-- SUCCESS MESSAGES -->
             <string name="login_successful">Logged in successfully!</string>
             <string name="registration_successful">Registration successfully!</string>
