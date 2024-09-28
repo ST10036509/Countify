@@ -46,14 +46,14 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
 
         // Set UI values
         holder.tvItemName.text = currentCounter.name.trim()
-        holder.tvCounter.text = currentCounter.currentValue.toString().trim()
+        holder.tvCounter.text = currentCounter.count.toString().trim()
         holder.tvDate.text = formattedDate.trim()
 
         // Increment counter
         holder.ivPlusButton.setOnClickListener {
             // increment the current counter value by its increment value
-            val updatedValue = currentCounter.currentValue + currentCounter.changeValue
-            currentCounter.currentValue = updatedValue  // update the local object
+            val updatedValue = currentCounter.count + currentCounter.changeValue
+            currentCounter.count = updatedValue  // update the local object
             holder.tvCounter.text = updatedValue.toString()  // Update UI with new value
 
             // save the updated value to Firestore
@@ -63,8 +63,8 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
         // Decrement counter
         holder.ivMinusButton.setOnClickListener {
             // Decrement the current counter value by its decrement value
-            val updatedValue = currentCounter.currentValue - currentCounter.changeValue
-            currentCounter.currentValue = updatedValue
+            val updatedValue = currentCounter.count - currentCounter.changeValue
+            currentCounter.count = updatedValue
             holder.tvCounter.text = updatedValue.toString()
 
             // save updated value to firestore
@@ -80,7 +80,7 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
                 .document(it)
         }
 
-        counterDocumentRef?.update("currentValue", counter.currentValue)?.addOnSuccessListener {
+        counterDocumentRef?.update("currentValue", counter.count)?.addOnSuccessListener {
             // Successfully updated Firestore, using getString from fragment context
             toaster.showToast(fragment.getString(R.string.counter_update_successful))
         }?.addOnFailureListener { e ->
