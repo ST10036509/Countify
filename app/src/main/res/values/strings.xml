@@ -1,3 +1,93 @@
 <resources>
-    <string name="app_name">Countify</string>
+    <string name="app_name" translatable="false">Countify</string>
+
+    <!-- Global -->
+    <string name="default_web_client_id" translatable="false">710600986289-vje0r5nvfk0bkje1r7ns22191anv7m7n.apps.googleusercontent.com</string>
+
+    <!-- Login, SSO, & Register Page -->
+    <string name="firstname">FIRST NAME</string>
+    <string name="lastname">LAST NAME</string>
+    <string name="email">EMAIL</string>
+    <string name="password">PASSWORD</string>
+    <string name="confirm_password">CONFIRM PASSWORD</string>
+    <string name="phone_number">PHONE NUMBER</string>
+    <string name="login">LOGIN</string>
+    <string name="register">REGISTER</string>
+    <string name="github" translatable="false">GitHub</string>
+    <string name="google" translatable="false">Google</string>
+    <string name="microsoft" translatable="false">Microsoft</string>
+    <string name="apple" translatable="false">Apple</string>
+    <string name="register_prompt">"Don't have an account yet? \nCreate one now."</string>
+    <string name="login_prompt">"Already have an account? \nLogin here."</string>
+    <string name="return_login">Return</string>
+            <!-- ERROR MESSAGES -->
+            <string name="login_invalid_inputs">Please enter a valid email and password</string>
+            <string name="null_inputs_error">"Please fill out all fields"</string>
+            <string name="invalid_phone_number_error">Please input a valid phone number</string>
+            <string name="password_mismatch_error">Passwords do not match</string>
+            <string name="weak_password_error">Password is too weak. Ensure it has at least ONE Capital,
+                                                   Digit, and Special Symbol and is 8 characters long</string>
+            <string name="registration_failed_header">Registration failed:</string>
+            <string name="counter_pull_failed">Failed to retrieve counters. Please try again</string>
+            <string name="counter_delete_failed">Counter has been deleted</string>
+            <string name="counter_update_failed">Value could not be updated. Please try again</string>
+            <!-- SUCCESS MESSAGES -->
+            <string name="login_successful">Logged in successfully!</string>
+            <string name="registration_successful">Registration successfully!</string>
+            <string name="counter_pull_successful">Fetched all counters successfully!</string>
+            <string name="counter_delete_successful">Counter has been deleted</string>
+            <string name="counter_update_successful">Value updated</string>
+
+    <!-- Settings Page -->
+    <string name="settings_header">Account Details</string>
+    <string name="advice_header">Daily Advice</string>
+
+    <string name="name_lbl">Name:</string>
+    <string name="name_example" translatable="false">Cameron</string>
+    <string name="surname_lbl">Surname:</string>
+    <string name="surname_example" translatable="false">Brooks</string>
+    <string name="email_lbl">Email:</string>
+    <string name="email_example" translatable="false">cbrooks02@gmail.com</string>
+
+    <string name="noti_on_lbl">Notifications (On)</string>
+    <string name="noti_off_lbl">Notifications (Off)</string>
+    <string name="theme_light_lbl">Theme (Light)</string>
+    <string name="theme_dark_lbl">Theme (Dark)</string>
+    <string name="language_eng_lbl">Language (English)</string>
+    <string name="language_afr_lbl">Language (Afrikaans)</string>
+
+    <string name="logout_btn">LOG OUT</string>
+    <string name="delete_btn">DELETE ACCOUNT</string>
+
+    <string name="creators_lbl">Created by HastyHQ</string>
+    <string name="version_lbl">Version 1.0</string>
+    <!-- End Settings Page -->
+
+
+    <!-- Counter Creation Page -->
+    <string name="create_counter">Create New Counter</string>
+    
+    <string name="title">TITLE:</string>
+    
+    <string name="repeat">REPEAT:</string>
+    
+    <string name="starting_value">STARTING VALUE:</string>
+    
+    <string name="inc_val">INCREMENT VALUE:</string>
+
+    <string name="create">CREATE</string>
+
+    <string name="return_">RETURN</string>
+
+    <!-- Spinner Values -->
+    <string-array name="repeat_options">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+
+    <!-- Counter Viewing Page -->
+    <string name="since" translatable="false">Since: </string>
+
 </resources>

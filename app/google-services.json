@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "710600986289",
+    "project_id": "countify-c05bb",
+    "storage_bucket": "countify-c05bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710600986289:android:e578ff55e31705968ddc90",
+        "android_client_info": {
+          "package_name": "st10036509.countify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710600986289-vje0r5nvfk0bkje1r7ns22191anv7m7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "st10036509.countify",
+            "certificate_hash": "0f26aad48c564a9b4ab2eeead013c9ec1d5b9b64"
+          }
+        },
+        {
+          "client_id": "710600986289-f6kk1g354j4l68d5e6l5tume39bb72ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9Yk_qdTNYDNkIVIn3QhFM9MyFRJ2Ty2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710600986289-f6kk1g354j4l68d5e6l5tume39bb72ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

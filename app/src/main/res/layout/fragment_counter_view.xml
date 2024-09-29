@@ -1,6 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_colour_light_grey">
+
+    <!-- Top Banner -->
+
+    <!-- Line -->
+    <LinearLayout
+        android:id="@+id/mainLogoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023">
+
+        <!-- Logo Icon-->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15sp"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/countify_logo" />
+
+        <!-- Application Name -->
+        <TextView
+            android:id="@+id/appNameTextView"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/eras_itc_demi"
+            android:text="@string/app_name"
+            android:textColor="@color/button_gray"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Setting Icon -->
+        <ImageView
+            android:id="@+id/iv_settingsButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/settings_icon" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/button_gray"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainLogoContainer"
+        app:layout_constraintVertical_bias="0.019">
+    </LinearLayout>
+
+    <!-- Recycler Items View -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_itemsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingBottom="200dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_divider"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_addItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="28dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/floating_action_button"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="65dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

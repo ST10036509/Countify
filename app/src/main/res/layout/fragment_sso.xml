@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- SSO Wrapper -->
+    <LinearLayout
+        android:id="@+id/mainSSOWrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Logo & Name -->
+        <TextView
+            android:id="@+id/tv_AppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/eras_itc_demi"
+            android:text="@string/app_name"
+            android:textColor="@color/button_gray"
+            android:textSize="48sp"
+            android:drawablePadding="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:contentDescription="@string/app_name"
+            app:drawableStartCompat="@drawable/countify_logo_resized_70" />
+
+        <!-- Login Form Container -->
+        <LinearLayout
+            android:id="@+id/SSOFormContainer"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- GitHub Button -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_GitHub"
+                android:layout_width="300dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="40dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#f2f2f7"
+                app:cardCornerRadius="25dp"
+                android:layout_gravity="center">
+
+                <!-- Horizontal LinearLayout for Image and Text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- GitHub Logo -->
+                    <ImageView
+                        android:id="@+id/img_GitHubLogo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/github"
+                        android:src="@drawable/github_logo_dark_grey" />
+
+                    <!-- Text -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/github"
+                        android:textColor="@color/button_gray"
+                        android:fontFamily="@font/segoe_ui_bold"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Google Button -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_Google"
+                android:layout_width="300dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#f2f2f7"
+                app:cardCornerRadius="25dp"
+                android:layout_gravity="center">
+
+                <!-- Horizontal LinearLayout for Image and Text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- Google Logo -->
+                    <ImageView
+                        android:id="@+id/img_GoogleImage"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/google"
+                        android:src="@drawable/google_logo" />
+
+                    <!-- Text -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/google"
+                        android:textColor="@color/button_gray"
+                        android:fontFamily="@font/segoe_ui_bold"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Microsoft Button -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_Microsoft"
+                android:layout_width="300dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#f2f2f7"
+                app:cardCornerRadius="25dp"
+                android:layout_gravity="center">
+
+                <!-- Horizontal LinearLayout for Image and Text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- Apple Logo -->
+                    <ImageView
+                        android:id="@+id/img_MicrosoftLogo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/microsoft"
+                        android:src="@drawable/microsoft_logo" />
+
+                    <!-- Text -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/microsoft"
+                        android:textColor="@color/button_gray"
+                        android:fontFamily="@font/segoe_ui_bold"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Apple Button -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_Apple"
+                android:layout_width="300dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="20dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#f2f2f7"
+                app:cardCornerRadius="25dp"
+                android:layout_gravity="center">
+
+                <!-- Horizontal LinearLayout for Image and Text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- Apple Logo -->
+                    <ImageView
+                        android:id="@+id/img_AppleLogo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/apple"
+                        android:src="@drawable/apple_logo_dark_grey" />
+
+                    <!-- Text -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apple"
+                        android:textColor="@color/button_gray"
+                        android:fontFamily="@font/segoe_ui_bold"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Return Button -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_Return"
+                android:layout_width="300dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="5dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/button_gray"
+                app:cardCornerRadius="25dp">
+
+            <!-- Text -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/return_"
+                android:textColor="@color/white"
+                android:fontFamily="@font/segoe_ui_bold"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="3dp"/>
+        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
