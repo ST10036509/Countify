@@ -19,6 +19,7 @@ googleServices = "4.4.2"
 firebaseFirestore = "25.1.0"
 firebaseAuth = "23.0.0"
 junitKtx = "1.2.1"
+firebaseMessagingKtx = "24.0.3"
 
 
 [libraries]
@@ -48,6 +49,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "21.2.0" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

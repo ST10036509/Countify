@@ -10,6 +10,8 @@ package st10036509.countify
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import st10036509.countify.service.NavigationService
 import st10036509.countify.user_interface.account.LoginFragment
 
@@ -20,6 +22,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         Log.e("Main Activity:", "Application Started")
+
+        Firebase.messaging.isAutoInitEnabled = true
+
+        /*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_NOTIFICATION_PERMISSION
+            )
+        }*/
 
         // initialise singleton navigation service upon application start and provide the Fragment Manager
         NavigationService.initialise(supportFragmentManager)
