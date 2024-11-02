@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import st10036509.countify.MainActivity
+import st10036509.countify.R
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -28,7 +29,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(message)
-            //.setSmallIcon(R.drawable.ic_notification) // replace with app icon
+            .setSmallIcon(R.mipmap.ic_launcher_app_icon) // replace with app icon
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 
