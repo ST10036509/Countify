@@ -1,6 +1,5 @@
 package st10036509.countify.user_interface.counter
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -42,9 +40,6 @@ class CounterCreationFragment : Fragment() {
     private var increment: Int = 1
     private var start: Int = 0
     private var timeStamp: Long = 0
-
-    // ActivityResultLauncher for Google Sign-In
-    private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -172,7 +167,7 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
-        val currentTime = getCurrentTimestamp();
+        val currentTime = getCurrentTimestamp()
 
         // Create the CounterModel instance
         val counter = CounterModel(
