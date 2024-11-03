@@ -1,6 +1,5 @@
 package st10036509.countify.user_interface.counter
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -28,10 +27,6 @@ import st10036509.countify.user_interface.account.SettingsFragment
 import st10036509.countify.utils.isMoreThanOne
 import st10036509.countify.utils.isMoreThanZero
 import st10036509.countify.utils.isTitleNull
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 class CounterCreationFragment : Fragment() {
 
@@ -177,28 +172,29 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
+        val currentTime = getCurrentTimestamp();
+
         // Create the CounterModel instance
         val counter = CounterModel(
             userId = userId,
             name = title,
+            startValue = start,
             count = start,
             changeValue = increment,
             repetition = repeat,
-            createdTimestamp = getCurrentTimestamp() // Set the timestamp here
+            createdTimestamp = currentTime,
+            lastReset = currentTime
         )
 
         // Call FirestoreService using the counter model directly
         FirestoreService.addCounter(counter) { success, error ->
             if (success) {
                 Toast.makeText(requireContext(), "Counter added successfully!", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter added to databse")
+                Log.i("addCounterToDatabase","Counter added to database")
             } else {
                 Toast.makeText(requireContext(), "Error adding counter: $error", Toast.LENGTH_SHORT).show()
                 Log.i("addCounterToDatabase","Counter failed to add to databases")
             }
         }
     }
-
-
-
 }

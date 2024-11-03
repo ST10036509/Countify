@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import st10036509.countify.R
 import st10036509.countify.adapter.CounterAdapter
 import st10036509.countify.model.CounterModel
@@ -39,6 +40,19 @@ class CounterViewFragment : Fragment() {
     private val firestore = FirebaseFirestore.getInstance()
     private var counterList: MutableList<CounterModel> = mutableListOf()
     private var currentUser: FirebaseUser? = null
+    private var registration: ListenerRegistration? = null
+
+    // method to fetch all counters on page start
+    override fun onStart() {
+        super.onStart()
+        fetchCountersFromFirestore() // fetch counters when the fragment starts
+    }
+
+    // method to remove the listener when the page is closed
+    override fun onStop() {
+        super.onStop()
+        registration?.remove() // remove the listener to avoid leaks
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,13 +64,22 @@ class CounterViewFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         currentUser = FirebaseAuthService.getCurrentUser()
 
-        fetchCountersFromFirestore()
+        //fetchCountersFromFirestore()
         setAppLocale(if (UserManager.currentUser?.language == 1) "af" else "default", requireContext())
 
-        // Set up ItemTouchHelper for swipe-to-delete functionality
+        //set up ItemTouchHelper for swipe-to-delete functionality
         setupSwipeToDelete()
 
-        //Initializing toaster
+        //initialize the counter list
+        counterList = mutableListOf()
+
+        //initialize the adapter
+        counterAdapter = CounterAdapter(counterList, this)
+
+        //set the adapter to your RecyclerView
+        recyclerView.adapter = counterAdapter
+
+        //initializing toaster
         toaster = Toaster(this)
 
         return view
@@ -93,28 +116,32 @@ class CounterViewFragment : Fragment() {
         val userID = currentUser?.uid
         firestore.collection("counters")
             .whereEqualTo("userId", userID)
-            .get()
-            .addOnSuccessListener { result ->
-                counterList.clear()
-                for (document in result) {
-                    val counter = CounterModel(
-                        counterId = document.id,  // Assign the document ID
-                        name = document.getString("name") ?: "",
-                        changeValue = document.getLong("incrementValue")?.toInt() ?: 0,
-                        count = document.getLong("count")?.toInt() ?: 1,
-                        createdTimestamp = document.getLong("createdTimestamp") ?: 0L,
-                        repetition = document.getString("repetition") ?: "",
-                        userId = document.getString("userId") ?: ""
-                    )
-                    counterList.add(counter)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    toaster.showToast(getString(R.string.counter_pull_failed))
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
                 }
-                // Setup the adapter with the fetched counters
-                counterAdapter = CounterAdapter(counterList, this)
-                recyclerView.adapter = counterAdapter
-                //.showToast(getString(R.string.counter_pull_successful))
-            }
-            .addOnFailureListener { exception ->
-                toaster.showToast(getString((R.string.counter_pull_failed)))
+
+                if (snapshot != null) {
+                    counterList.clear()
+                    for (document in snapshot.documents) {
+                        val counter = CounterModel(
+                            counterId = document.id,
+                            name = document.getString("name") ?: "",
+                            changeValue = document.getLong("incrementValue")?.toInt() ?: 0,
+                            count = document.getLong("count")?.toInt() ?: 1,
+                            createdTimestamp = document.getLong("createdTimestamp") ?: 0L,
+                            repetition = document.getString("repetition") ?: "",
+                            userId = document.getString("userId") ?: ""
+                        )
+                        counterList.add(counter)
+                    }
+                    //notify the adapter that the data has changed
+                    counterAdapter.notifyDataSetChanged()
+                } else {
+                    Log.d(TAG, "Current data: null")
+                }
             }
     }
 
@@ -130,20 +157,24 @@ class CounterViewFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val counterToDelete = counterList[position]
 
-                // Remove from Firestore
-                counterToDelete.counterId?.let {
-                    firestore.collection("counters").document(it)
-                        .delete()
-                        .addOnSuccessListener {
-                            toaster.showToast(getString(R.string.counter_delete_successful))
-                            counterList.removeAt(position)
-                            counterAdapter.notifyItemRemoved(position)
-                        }
-                        .addOnFailureListener { e ->
-                            toaster.showToast(getString(R.string.counter_delete_failed))
-                        }
+                if (position != RecyclerView.NO_POSITION) {
+                    val counterToDelete = counterList[position]
+
+                    //remove from Firestore
+                    counterToDelete.counterId?.let {
+                        firestore.collection("counters").document(it)
+                            .delete()
+                            .addOnSuccessListener {
+                                //remove from the list only after Firestore delete is successful
+                                //notify the adapter that the data has changed
+                                counterAdapter.notifyItemRemoved(position)
+                                toaster.showToast(getString(R.string.counter_delete_successful))
+                            }
+                            .addOnFailureListener { e ->
+                                toaster.showToast(getString(R.string.counter_delete_failed))
+                            }
+                    }
                 }
             }
 

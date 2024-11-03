@@ -96,7 +96,9 @@ object FirestoreService {
             "incrementValue" to counter.changeValue,
             "name" to counter.name,
             "repetition" to counter.repetition,
-            "userId" to counter.userId
+            "userId" to counter.userId,
+            "startValue" to counter.startValue,
+            "lastReset" to counter.lastReset
         )
 
         Log.i("Firestore Service:", "Counter Model Created")
