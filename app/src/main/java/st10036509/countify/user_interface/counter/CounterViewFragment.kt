@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import st10036509.countify.R
 import st10036509.countify.adapter.CounterAdapter
 import st10036509.countify.model.CounterModel
@@ -29,6 +28,7 @@ import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.account.SettingsFragment
 import java.util.Locale
+
 
 class CounterViewFragment : Fragment() {
 
@@ -40,18 +40,11 @@ class CounterViewFragment : Fragment() {
     private val firestore = FirebaseFirestore.getInstance()
     private var counterList: MutableList<CounterModel> = mutableListOf()
     private var currentUser: FirebaseUser? = null
-    private var registration: ListenerRegistration? = null
 
     // method to fetch all counters on page start
     override fun onStart() {
         super.onStart()
         fetchCountersFromFirestore() // fetch counters when the fragment starts
-    }
-
-    // method to remove the listener when the page is closed
-    override fun onStop() {
-        super.onStop()
-        registration?.remove() // remove the listener to avoid leaks
     }
 
     override fun onCreateView(

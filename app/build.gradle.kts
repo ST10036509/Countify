@@ -89,6 +89,9 @@ dependencies {
 
     implementation("androidx.work:work-runtime-ktx:2.7.1")
 
+    implementation("androidx.core:core-ktx:1.9.0")
+
+
     // testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
