@@ -1,8 +1,11 @@
 package st10036509.countify.user_interface.counter
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.system.Os
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +19,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import st10036509.countify.R
 import st10036509.countify.model.CounterModel
+import st10036509.countify.service.CounterDatabaseHelper
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
+import st10036509.countify.user_interface.counter.CounterViewFragment
 import st10036509.countify.user_interface.account.SettingsFragment
 import st10036509.countify.utils.isMoreThanOne
 import st10036509.countify.utils.isMoreThanZero
@@ -57,6 +63,9 @@ class CounterCreationFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_counter_creation, container, false)
         toaster = Toaster(this)
+
+        val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
+        counterViewFragment?.syncUnsyncedCounters()
 
         // Initialize input fields
         titleInput = view.findViewById(R.id.title_input)
@@ -184,20 +193,33 @@ class CounterCreationFragment : Fragment() {
             count = start,
             changeValue = increment,
             repetition = repeat,
-            createdTimestamp = getCurrentTimestamp() // Set the timestamp here
+            createdTimestamp = getCurrentTimestamp(),
+            synced = false  // Initially set as unsynced
         )
 
-        // Call FirestoreService using the counter model directly
-        FirestoreService.addCounter(counter) { success, error ->
-            if (success) {
-                Toast.makeText(requireContext(), "Counter added successfully!", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter added to databse")
-            } else {
-                Toast.makeText(requireContext(), "Error adding counter: $error", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter failed to add to databases")
-            }
+        // Save counter locally in SQLite
+        val dbHelper = CounterDatabaseHelper(requireContext())
+        dbHelper.insertCounter(counter)
+
+        // Try to sync with Firestore if connected
+        if (isConnected()) {
+            // Retrieve the CounterViewFragment by tag
+            val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
+
+            // Call the sync method if the fragment is found
+            counterViewFragment?.syncUnsyncedCounters()
+        } else {
+            Toast.makeText(requireContext(), "Counter saved locally. Will sync when online.", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun isConnected(): Boolean {
+        // Check network connectivity status
+        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
+    }
+
 
 
 

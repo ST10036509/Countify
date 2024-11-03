@@ -85,7 +85,7 @@ object FirestoreService {
     }
 
     // method to add a counter document to the "counters_tests" collection
-    fun addCounter(
+    fun addCounterOLD(
         counter: CounterModel,
         onComplete: (Boolean, String?) -> Unit
     ) {
@@ -111,6 +111,25 @@ object FirestoreService {
                 Log.i("Firestore Service:", "Counter Document Creation Process Failed - $error")
                 onComplete(false, error) // failed to add counter, return error message
             }
+        }
+    }
+
+    fun addCounter(
+        counter: CounterModel,
+        callback: (Boolean, String?) -> Unit) {
+        FirebaseFirestore.getInstance().collection("counters")
+            .add(counter)
+            .addOnSuccessListener { callback(true, null) }
+            .addOnFailureListener { e -> callback(false, e.message) }
+    }
+
+    fun updateCounter(counter: CounterModel, callback: (Boolean, String?) -> Unit) {
+        counter.counterId?.let {
+            FirebaseFirestore.getInstance().collection("counters")
+                .document(it)
+                .set(counter)
+                .addOnSuccessListener { callback(true, null) }
+                .addOnFailureListener { e -> callback(false, e.message) }
         }
     }
 }

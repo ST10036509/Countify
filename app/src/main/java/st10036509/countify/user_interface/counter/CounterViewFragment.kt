@@ -5,12 +5,16 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -23,7 +27,9 @@ import st10036509.countify.R
 import st10036509.countify.adapter.CounterAdapter
 import st10036509.countify.model.CounterModel
 import st10036509.countify.model.UserManager
+import st10036509.countify.service.CounterDatabaseHelper
 import st10036509.countify.service.FirebaseAuthService
+import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.account.SettingsFragment
@@ -73,6 +79,14 @@ class CounterViewFragment : Fragment() {
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (isConnected(requireContext())) {
+            syncUnsyncedCounters()
+        }
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -104,7 +118,8 @@ class CounterViewFragment : Fragment() {
                         count = document.getLong("count")?.toInt() ?: 1,
                         createdTimestamp = document.getLong("createdTimestamp") ?: 0L,
                         repetition = document.getString("repetition") ?: "",
-                        userId = document.getString("userId") ?: ""
+                        userId = document.getString("userId") ?: "",
+                        synced = (document.getBoolean("synced") ?: 0) as Boolean,
                     )
                     counterList.add(counter)
                 }
@@ -117,6 +132,68 @@ class CounterViewFragment : Fragment() {
                 toaster.showToast(getString((R.string.counter_pull_failed)))
             }
     }
+
+
+    fun syncUnsyncedCounters() {
+
+        val dbHelper = CounterDatabaseHelper(context ?: return)
+        val unsyncedCounters = dbHelper.getUnsyncedCounters()
+
+        for (counter in unsyncedCounters) {
+            FirestoreService.addCounter(counter) { success, error ->
+                if (success) {
+                    // Mark counter as synced in local SQLite
+                    counter.synced = true
+                    dbHelper.updateCounter(counter)
+                    Toast.makeText(context, "Synced counter: ${counter.name}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("syncUnsyncedCounters", "Failed to sync counter: ${counter.name} - $error")
+                }
+            }
+        }
+
+        // Optional: Clear synced data from SQLite if all are successfully uploaded
+        if (unsyncedCounters.all { it.synced }) {
+            dbHelper.clearCounters()
+        }
+    }
+
+    fun updateCounter(counter: CounterModel) {
+        val dbHelper = CounterDatabaseHelper(requireContext())
+        counter.synced = isConnected(requireContext())  // Mark as synced only if connected
+        dbHelper.updateCounter(counter)
+
+        if (counter.synced) {
+            FirestoreService.updateCounter(counter) { success, error ->
+                if (!success) {
+                    // Handle Firestore update failure (optional logging or retry)
+                    counter.synced = false
+                    dbHelper.updateCounter(counter)
+                }
+            }
+        }
+    }
+
+
+    fun isConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+    }
+
 
     private fun setupSwipeToDelete() {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
