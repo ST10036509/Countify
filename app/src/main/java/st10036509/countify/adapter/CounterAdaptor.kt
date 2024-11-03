@@ -53,7 +53,10 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             currentCounter.count = updatedValue  // update the local object
             holder.tvCounter.text = updatedValue.toString()  // Update UI with new value
 
-            // save the updated value to Firestore
+            //notify the adapter of the item change
+            notifyItemChanged(position)
+
+            //save the updated value to Firestore
             saveUpdatedCounterValueToFirestore(currentCounter)
         }
 
@@ -65,6 +68,9 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             if (updatedValue > 0){
                 currentCounter.count = updatedValue
                 holder.tvCounter.text = updatedValue.toString()
+
+                //notify the adapter of the item change
+                notifyItemChanged(position)
 
                 // save updated value to firestore
                 saveUpdatedCounterValueToFirestore(currentCounter)

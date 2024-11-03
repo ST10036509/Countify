@@ -186,14 +186,18 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
+        val currentTime = getCurrentTimestamp();
+
         // Create the CounterModel instance
         val counter = CounterModel(
             userId = userId,
             name = title,
+            startValue = start,
             count = start,
             changeValue = increment,
             repetition = repeat,
-            createdTimestamp = getCurrentTimestamp(),
+            createdTimestamp = currentTime,
+            lastReset = currentTime,
             synced = false  // Initially set as unsynced
         )
 
@@ -219,8 +223,5 @@ class CounterCreationFragment : Fragment() {
         val activeNetwork = connectivityManager.activeNetworkInfo
         return activeNetwork != null && activeNetwork.isConnected
     }
-
-
-
 
 }
