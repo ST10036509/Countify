@@ -26,6 +26,7 @@ import st10036509.countify.service.GoogleAccountService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
+import st10036509.countify.utils.ProgressDialogFragment
 import st10036509.countify.utils.areNullInputs
 import st10036509.countify.utils.hideKeyboard
 import st10036509.countify.utils.isPasswordStrong
@@ -93,6 +94,8 @@ class RegisterFragment: Fragment() {
         // initialise UI components
         setupUIComponents(view)
     }
+
+
 
     private fun setupUIComponents(view: View) {
 
@@ -197,6 +200,10 @@ class RegisterFragment: Fragment() {
 
         val context = requireContext() // Ensure you're within a fragment
 
+        //show the loading dialog
+        val progressDialog = ProgressDialogFragment()
+        activity?.let { progressDialog.show(it.supportFragmentManager, "LoadingDialog")}
+
         FirebaseAuthService.registerUser(inputs.email, inputs.password) { isSuccess, errorMessage ->
             if (isSuccess) {
                 val userId = FirebaseAuthService.getCurrentUser()?.uid ?: ""
@@ -235,6 +242,9 @@ class RegisterFragment: Fragment() {
             } else {
                 toaster.showToast(" ${context.getString(R.string.registration_failed_header)} $errorMessage") // error out
             }
+
+            //dismiss the loading dialog
+            progressDialog.dismiss()
         }
     }
 }
