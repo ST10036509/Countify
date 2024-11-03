@@ -49,6 +49,9 @@
     <string name="counter_update_successful">Waarde opgedatee</string>
     <!-- Spinner Values -->
     <string-array name="repeat_options">
+        <item>Niks</item>
+        <item>30 Sekondes</item>
+        <item>15 Minute</item>
         <item>Daagliks</item>
         <item>Weekliks</item>
         <item>Maandeliks</item>

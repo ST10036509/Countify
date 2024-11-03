@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CounterAdapter(private val counterList: List<CounterModel>, private val fragment: Fragment) :
+class CounterAdapter(private val counterList: MutableList<CounterModel>, private val fragment: Fragment) :
     RecyclerView.Adapter<CounterAdapter.CounterViewHolder>() {
 
         private var toaster: Toaster
@@ -41,23 +41,26 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
         val currentCounter = counterList[position]
         val formattedDate = formatTimestampToDate(currentCounter.createdTimestamp)
 
-        // Set UI values
+        //set UI values
         holder.tvItemName.text = currentCounter.name.trim()
         holder.tvCounter.text = currentCounter.count.toString().trim()
         holder.tvDate.text = formattedDate.trim()
 
-        // Increment counter
+        //increment counter
         holder.ivPlusButton.setOnClickListener {
             // increment the current counter value by its increment value
             val updatedValue = currentCounter.count + currentCounter.changeValue
             currentCounter.count = updatedValue  // update the local object
             holder.tvCounter.text = updatedValue.toString()  // Update UI with new value
 
-            // save the updated value to Firestore
+            //notify the adapter of the item change
+            notifyItemChanged(position)
+
+            //save the updated value to Firestore
             saveUpdatedCounterValueToFirestore(currentCounter)
         }
 
-        // Decrement counter
+        //decrement counter
         holder.ivMinusButton.setOnClickListener {
             // Decrement the current counter value by its decrement value
             val updatedValue = currentCounter.count - currentCounter.changeValue
@@ -65,6 +68,9 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             if (updatedValue > 0){
                 currentCounter.count = updatedValue
                 holder.tvCounter.text = updatedValue.toString()
+
+                //notify the adapter of the item change
+                notifyItemChanged(position)
 
                 // save updated value to firestore
                 saveUpdatedCounterValueToFirestore(currentCounter)
