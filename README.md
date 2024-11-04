@@ -21,3 +21,5 @@
 Read the full documentation here: [User Documentation](./user_documentation.pdf) 
 
 Read the change log here: [Change Log](./change_log.pdf)
+
+Watch the demo video here: [Demo Video](./countify_demo_video.mkv)
