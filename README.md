@@ -18,6 +18,6 @@
 2. Sync Gradle in Android Studio and run the project.
 
 ## Documentation
-Read the full documentation here: [User Documentation](./user-documentation.pdf) 
+Read the full documentation here: [User Documentation](./user_documentation.pdf) 
 
 Read the change log here: [Change Log](./change_log.pdf)
