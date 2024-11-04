@@ -37,6 +37,13 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
         return CounterViewHolder(itemView)
     }
 
+    fun updateData(newCounterList: List<CounterModel>) {
+        //counterList.clear()                // Clear the existing data
+        counterList.addAll(newCounterList) // Add all items from the new data
+        notifyDataSetChanged()             // Notify the adapter that data has changed
+    }
+
+
     override fun onBindViewHolder(holder: CounterViewHolder, position: Int) {
         val currentCounter = counterList[position]
         val formattedDate = formatTimestampToDate(currentCounter.createdTimestamp)

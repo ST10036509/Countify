@@ -56,6 +56,35 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
         onCreate(db)
     }
 
+    fun getCountersByUserId(userId: String): List<CounterModel> {
+        val counters = mutableListOf<CounterModel>()
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_COUNTERS WHERE $COLUMN_USER_ID = ?"
+
+        val cursor: Cursor = db.rawQuery(query, arrayOf(userId))
+
+        if (cursor.moveToFirst()) {
+            do {
+                val counter = CounterModel(
+                    counterId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                    changeValue = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CHANGE_VALUE)),
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNT)),
+                    startValue = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_START_VALUE)),
+                    createdTimestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_CREATED_TIMESTAMP)),
+                    repetition = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REPETITION)),
+                    userId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
+                    synced = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SYNCED)) == 1
+                )
+                counters.add(counter)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        return counters
+    }
+
     // Helper function to convert Cursor to CounterModel
     private fun cursorToCounter(cursor: Cursor): CounterModel {
         return CounterModel(
@@ -138,10 +167,11 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
         return counters
     }
 
-
     // Clear all counters
     fun clearCounters() {
         val db = writableDatabase
         db.delete(TABLE_COUNTERS, null, null)
     }
+
+
 }
