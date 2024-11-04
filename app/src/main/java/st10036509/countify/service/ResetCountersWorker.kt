@@ -28,14 +28,15 @@ class ResetCountersWorker(
 
 
 
-    // worker to reset counters to original valuea
+    // worker to reset counters to original values
     override suspend fun doWork(): Result {
+        Log.d(ContentValues.TAG, "Worker started")
         return try {
-            Log.w(ContentValues.TAG, "Checking counters")
             resetCounters()
+            Log.d(ContentValues.TAG, "Worker completed successfully")
             Result.success()
         } catch (e: Exception) {
-            Log.e(ContentValues.TAG, "Error resetting counters: ${e.message}")
+            Log.e(ContentValues.TAG, "Error in worker: ${e.message}")
             Result.failure()
         }
     }

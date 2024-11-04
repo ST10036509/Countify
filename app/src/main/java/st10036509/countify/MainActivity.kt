@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import st10036509.countify.service.NavigationService
@@ -68,7 +69,12 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         //enqueue the work request
-        WorkManager.getInstance(this).enqueue(resetRequest)
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                "ResetCountersWorker",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                resetRequest
+            )
 
         Log.d("Main Activity:", "ResetCountersWorker scheduled to run every 15 minutes.")
     }
