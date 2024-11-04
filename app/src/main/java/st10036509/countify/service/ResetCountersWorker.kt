@@ -5,8 +5,8 @@ Date Created: 03/11/2024
 Last Modified: 03/11/2024
  */
 
-
 package st10036509.countify.service
+
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
@@ -14,6 +14,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import st10036509.countify.model.UserManager
 
 class ResetCountersWorker(
     context: Context,
@@ -22,6 +23,9 @@ class ResetCountersWorker(
 
     private val db = FirebaseFirestore.getInstance() //get Firebase db instance
     private val currentUser = FirebaseAuthService.getCurrentUser() //get current user
+
+    private var notificationCount: Int = 0
+
 
 
     // worker to reset counters to original valuea
@@ -44,22 +48,31 @@ class ResetCountersWorker(
             .get()
             .await()
 
-        Log.w(ContentValues.TAG, "Getting counters for user");
+        Log.i("User data:", "${UserManager.currentUser}")
+
+        Log.w(ContentValues.TAG, "Getting counters for user")
 
         for (document in counters.documents) {
             val counterData = document.data ?: continue // Safely access document data
             val lastReset = (counterData["lastReset"] as? Long) ?: 0L // Default to 0 if null
             val resetFrequency = (counterData["repetition"] as? String) ?: "15 Minutes"
             val startValue = (counterData["startValue"] as? Long)?.toInt() ?: 0 // Default to 0 if null
+            val currentValue = (counterData["count"] as? Long)?.toInt() ?: 0 // Default to 0 if null
+            val counterName = (counterData["name"] as? String) ?: "Unknown"
 
-            if (shouldReset(lastReset, resetFrequency)) {
+            // Check if the current value is different from the start value
+            if (currentValue != startValue && shouldReset(lastReset, resetFrequency)) {
                 Log.e("ResetCounterWorker:", "Resetting counter for document: ${document.id}")
                 document.reference.update(
                     mapOf(
                         "count" to startValue,
                         "lastReset" to System.currentTimeMillis()
                     )
-                ).addOnFailureListener { e ->
+                ).addOnSuccessListener {
+                    if (UserManager.currentUser?.notificationsEnabled != false){
+                        sendResetNotification(counterName, applicationContext)
+                    }
+                }.addOnFailureListener { e ->
                     Log.e("ResetCounterWorker:", "Error updating document: ${e.message}")
                 }
             }
@@ -100,6 +113,17 @@ class ResetCountersWorker(
                 now >= oneYearLater
             }
             else -> false //return false if no repeat category is selected
+        }
+    }
+
+    private fun sendResetNotification(counterName: String, context: Context) {
+        context?.let { safeContext ->
+            NotificationService.showNotification(
+                context = safeContext,
+                notificationId = notificationCount++,
+                title = "Counter Reset",
+                message = "Your $counterName counter has been reset"
+            )
         }
     }
 }

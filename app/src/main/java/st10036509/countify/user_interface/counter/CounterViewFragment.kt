@@ -36,6 +36,7 @@ import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.account.SettingsFragment
 import java.util.Locale
 
+
 class CounterViewFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView

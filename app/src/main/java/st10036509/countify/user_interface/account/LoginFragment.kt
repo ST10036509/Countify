@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ import st10036509.countify.service.GoogleAccountService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
 import st10036509.countify.user_interface.counter.CounterViewFragment
+import st10036509.countify.utils.ProgressDialogFragment
 import st10036509.countify.utils.areNullInputs
 import st10036509.countify.utils.hideKeyboard
 import st10036509.countify.utils.toMutableListLogin
@@ -90,6 +92,11 @@ class LoginFragment : Fragment() {
     // run after fragment has been created
     override fun onResume() {
         super.onResume()
+
+        //set a callback for the back button to prevent navigating back from the login screen
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finish() //close the app if back button is pressed on login screen
+        }
 
         Log.i("Login Fragment:", "Fetching Current User")
         // get the current user (if they are logged in)
@@ -215,6 +222,11 @@ class LoginFragment : Fragment() {
     // method to handle email & password login authentication
     private fun handleEmailPasswordLogin(inputs: LoginInputs) {
         Log.i("Login Fragment:", "Handling Login Process")
+
+        //show the loading dialog
+        val progressDialog = ProgressDialogFragment()
+        activity?.let { progressDialog.show(it.supportFragmentManager, "LoadingDialog") }
+
         //run firebase login method
         FirebaseAuthService.loginUser(inputs.email, inputs.password) { isLoginSuccess, loginErrorMessage ->
             if (isLoginSuccess) { // if login is successful
@@ -241,6 +253,9 @@ class LoginFragment : Fragment() {
                 Log.i("Login Fragment:", "Login Failed. Logging User Out...")
                 toaster.showToast(loginErrorMessage) // failed login with appropriate message
             }
+
+            //dismiss the loading dialog
+            progressDialog.dismiss()
         }
     }
 }
