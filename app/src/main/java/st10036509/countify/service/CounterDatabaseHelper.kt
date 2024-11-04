@@ -6,14 +6,18 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.getSystemService
 import st10036509.countify.model.CounterModel
 
 class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "counter_database"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         private const val TABLE_COUNTERS = "counters"
         private const val COLUMN_ID = "id"
@@ -21,6 +25,7 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
         private const val COLUMN_COUNTER_ID = "counterId"
         private const val COLUMN_NAME = "name"
         private const val COLUMN_CHANGE_VALUE = "changeValue"
+        private const val COLUMN_START_VALUE = "startValue"
         private const val COLUMN_REPETITION = "repetition"
         private const val COLUMN_CREATED_TIMESTAMP = "createdTimestamp"
         private const val COLUMN_COUNT = "count"
@@ -28,17 +33,19 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+
         val createTable = """
             CREATE TABLE $TABLE_COUNTERS (
-                $COLUMN_ID TEXT,
+                $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_USER_ID TEXT,
                 $COLUMN_COUNTER_ID TEXT,
                 $COLUMN_NAME TEXT,
                 $COLUMN_CHANGE_VALUE INTEGER,
                 $COLUMN_REPETITION TEXT,
+                $COLUMN_START_VALUE INTEGER,
                 $COLUMN_CREATED_TIMESTAMP INTEGER,
                 $COLUMN_COUNT INTEGER,
-                $COLUMN_SYNCED INTEGER
+                $COLUMN_SYNCED BOOLEAN
             )
         """
         db.execSQL(createTable)
@@ -52,12 +59,13 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
     // Helper function to convert Cursor to CounterModel
     private fun cursorToCounter(cursor: Cursor): CounterModel {
         return CounterModel(
-            id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+            id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
             userId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
             counterId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COUNTER_ID)),
             name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
             changeValue = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CHANGE_VALUE)),
             repetition = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REPETITION)),
+            startValue = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_START_VALUE)),
             createdTimestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_CREATED_TIMESTAMP)),
             count = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COUNT)),
             synced = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SYNCED)) == 1
@@ -72,6 +80,7 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
             put(COLUMN_COUNTER_ID, counter.counterId)
             put(COLUMN_NAME, counter.name)
             put(COLUMN_CHANGE_VALUE, counter.changeValue)
+            put(COLUMN_START_VALUE, counter.startValue)
             put(COLUMN_REPETITION, counter.repetition)
             put(COLUMN_CREATED_TIMESTAMP, counter.createdTimestamp)
             put(COLUMN_COUNT, counter.count)
@@ -88,19 +97,24 @@ class CounterDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
             put(COLUMN_COUNTER_ID, counter.counterId)
             put(COLUMN_NAME, counter.name)
             put(COLUMN_CHANGE_VALUE, counter.changeValue)
+            put(COLUMN_START_VALUE, counter.startValue)
             put(COLUMN_REPETITION, counter.repetition)
             put(COLUMN_CREATED_TIMESTAMP, counter.createdTimestamp)
             put(COLUMN_COUNT, counter.count)
             put(COLUMN_SYNCED, if (counter.synced) 1 else 0)
         }
-        return db.update(TABLE_COUNTERS, values, "$COLUMN_ID = ?", arrayOf(counter.id.toString()))
+        val rowsAffected = db.update(TABLE_COUNTERS, values, "$COLUMN_ID = ?", arrayOf(counter.id.toString()))
+        db.close()  // Close the database after update
+        return rowsAffected
     }
 
+
     // Delete a counter
-    fun deleteCounter(counterId: Long): Int {
+    fun deleteCounter(counterId: String?): Int {
         val db = writableDatabase
-        return db.delete(TABLE_COUNTERS, "$COLUMN_ID = ?", arrayOf(counterId.toString()))
+        return db.delete(TABLE_COUNTERS, "$COLUMN_COUNTER_ID = ?", arrayOf(counterId))
     }
+
 
     // Get all unsynced counters
     fun getUnsyncedCounters(): List<CounterModel> {

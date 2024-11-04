@@ -118,12 +118,36 @@ object FirestoreService {
 
     fun addCounter(
         counter: CounterModel,
-        callback: (Boolean, String?) -> Unit) {
-        FirebaseFirestore.getInstance().collection("counters")
+        callback: (Boolean, String?) -> Unit
+    ) {
+        // Set the `synced` value to true before saving to Firestore
+        counter.synced = true
+
+        // Add the counter to Firestore
+        db.collection("counters")
             .add(counter)
-            .addOnSuccessListener { callback(true, null) }
-            .addOnFailureListener { e -> callback(false, e.message) }
+            .addOnSuccessListener { documentReference ->
+                // Retrieve the document ID and set it as the counterId in the counter model
+                val generatedId = documentReference.id
+                counter.counterId = generatedId
+
+                // Update the document with the counterId field
+                documentReference.update("counterId", generatedId)
+                    .addOnSuccessListener {
+                        // Call the callback with success
+                        callback(true, null)
+                    }
+                    .addOnFailureListener { e ->
+                        // Handle failure to update the counterId
+                        callback(false, e.message)
+                    }
+            }
+            .addOnFailureListener { e ->
+                // Handle failure to add the counter
+                callback(false, e.message)
+            }
     }
+
 
     fun updateCounter(counter: CounterModel, callback: (Boolean, String?) -> Unit) {
         counter.counterId?.let {

@@ -61,7 +61,8 @@ class CounterViewFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-        if (isConnected(requireContext())) {
+        val dbHelper = CounterDatabaseHelper(context ?: return)
+        if (isConnected(context ?: return)) {
             syncUnsyncedCounters()
         }
     }
@@ -143,8 +144,9 @@ class CounterViewFragment : Fragment() {
                         val counter = CounterModel(
                             counterId = document.id,
                             name = document.getString("name") ?: "",
-                            changeValue = document.getLong("incrementValue")?.toInt() ?: 0,
+                            changeValue = document.getLong("changeValue")?.toInt() ?: 0,
                             count = document.getLong("count")?.toInt() ?: 1,
+                            startValue =  document.getLong("startValue")?.toInt() ?: 1,
                             createdTimestamp = document.getLong("createdTimestamp") ?: 0L,
                             repetition = document.getString("repetition") ?: "",
                             userId = document.getString("userId") ?: "",
@@ -162,40 +164,31 @@ class CounterViewFragment : Fragment() {
 
 
     fun syncUnsyncedCounters() {
-
         val dbHelper = CounterDatabaseHelper(context ?: return)
         val unsyncedCounters = dbHelper.getUnsyncedCounters()
 
-        for (counter in unsyncedCounters) {
-            FirestoreService.addCounter(counter) { success, error ->
-                if (success) {
-                    // Mark counter as synced in local SQLite
-                    counter.synced = true
-                    dbHelper.updateCounter(counter)
-                    Toast.makeText(context, "Synced counter: ${counter.name}", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.e("syncUnsyncedCounters", "Failed to sync counter: ${counter.name} - $error")
-                }
-            }
-        }
+        if (isConnected(context ?: return)) {
+            for (counter in unsyncedCounters) {
+                FirestoreService.addCounter(counter) { success, error ->
+                    if (success) {
+                        // Mark counter as synced in the local SQLite database
+                        counter.synced = true
+                        dbHelper.updateCounter(counter)
 
-        // Optional: Clear synced data from SQLite if all are successfully uploaded
-        if (unsyncedCounters.all { it.synced }) {
-            dbHelper.clearCounters()
-        }
-    }
+                        // Remove the synced counter from the SQLite database
+                        dbHelper.deleteCounter(counter.counterId)
 
-    fun updateCounter(counter: CounterModel) {
-        val dbHelper = CounterDatabaseHelper(requireContext())
-        counter.synced = isConnected(requireContext())  // Mark as synced only if connected
-        dbHelper.updateCounter(counter)
-
-        if (counter.synced) {
-            FirestoreService.updateCounter(counter) { success, error ->
-                if (!success) {
-                    // Handle Firestore update failure (optional logging or retry)
-                    counter.synced = false
-                    dbHelper.updateCounter(counter)
+                        Toast.makeText(
+                            context,
+                            "Synced counter: ${counter.name}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Log.e(
+                            "syncUnsyncedCounters",
+                            "Failed to sync counter: ${counter.name} - $error"
+                        )
+                    }
                 }
             }
         }

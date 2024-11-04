@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.system.Os
 import android.util.Log
@@ -64,8 +66,6 @@ class CounterCreationFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_counter_creation, container, false)
         toaster = Toaster(this)
 
-        val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
-        counterViewFragment?.syncUnsyncedCounters()
 
         // Initialize input fields
         titleInput = view.findViewById(R.id.title_input)
@@ -186,10 +186,12 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
+
         val currentTime = getCurrentTimestamp();
 
         // Create the CounterModel instance
         val counter = CounterModel(
+            counterId = "",
             userId = userId,
             name = title,
             startValue = start,
@@ -202,26 +204,38 @@ class CounterCreationFragment : Fragment() {
         )
 
         // Save counter locally in SQLite
-        val dbHelper = CounterDatabaseHelper(requireContext())
+        val dbHelper = CounterDatabaseHelper(context ?: return)
         dbHelper.insertCounter(counter)
 
         // Try to sync with Firestore if connected
-        if (isConnected()) {
+        if (isConnected(context ?: return)) {
             // Retrieve the CounterViewFragment by tag
             val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
 
             // Call the sync method if the fragment is found
             counterViewFragment?.syncUnsyncedCounters()
         } else {
-            Toast.makeText(requireContext(), "Counter saved locally. Will sync when online.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context ?: return, "Counter saved locally. Will sync when online.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun isConnected(): Boolean {
-        // Check network connectivity status
-        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnected
+    fun isConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
     }
 
 }

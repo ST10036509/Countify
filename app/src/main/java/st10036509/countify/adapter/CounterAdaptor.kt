@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CounterAdapter(private val counterList: List<CounterModel>, private val fragment: Fragment) :
+class CounterAdapter(private val counterList: MutableList<CounterModel>, private val fragment: Fragment) :
     RecyclerView.Adapter<CounterAdapter.CounterViewHolder>() {
 
         private var toaster: Toaster
