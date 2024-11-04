@@ -210,7 +210,7 @@ class CounterCreationFragment : Fragment() {
             // Call the sync method if the fragment is found
             counterViewFragment?.syncUnsyncedCounters()
         } else {
-            Toast.makeText(context ?: return, "Counter saved locally. Will sync when online.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context ?: return, "Check your internet connection and try again.", Toast.LENGTH_SHORT).show()
         }
     }
 

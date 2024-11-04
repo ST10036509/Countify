@@ -1,6 +1,5 @@
 package st10036509.countify.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,7 +92,6 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
         }
     }
 
-
     private fun saveUpdatedCounterValueToFirestore(counter: CounterModel) {
         val counterDocumentRef = counter.counterId?.let {
             FirebaseFirestore.getInstance()
@@ -109,7 +107,6 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
             toaster.showToast(fragment.getString((R.string.counter_update_failed)))
         }
     }
-
 
     fun formatTimestampToDate(timestampInMillis: Long): String {
         val date = Date(timestampInMillis) //convert timestamp to date
