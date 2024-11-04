@@ -181,7 +181,6 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
-
         val currentTime = getCurrentTimestamp()
 
         // Create the CounterModel instance
@@ -202,15 +201,21 @@ class CounterCreationFragment : Fragment() {
         val dbHelper = CounterDatabaseHelper(context ?: return)
         dbHelper.insertCounter(counter)
 
-        // Try to sync with Firestore if connected
+        // Check if connected before attempting to sync and displaying success
         if (isConnected(context ?: return)) {
             // Retrieve the CounterViewFragment by tag
             val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
 
-            // Call the sync method if the fragment is found
+            // Sync counters if the fragment is available
             counterViewFragment?.syncUnsyncedCounters()
+
+            // Display success toast and navigate
+            toaster.showToast("Counter creation successful")
+            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
         } else {
-            Toast.makeText(context ?: return, "Check your internet connection and try again.", Toast.LENGTH_SHORT).show()
+            // Display a connection error message if there's no connection
+            Toast.makeText(context ?: return, "Refresh the app with an internet connection to view the counter.", Toast.LENGTH_SHORT).show()
+            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
         }
     }
 
