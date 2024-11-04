@@ -52,6 +52,7 @@ class CounterViewFragment : Fragment() {
     // method to fetch all counters on page start
     override fun onStart() {
         super.onStart()
+        fetchCountersFromLocalDatabase()
         fetchCountersFromFirestore() // fetch counters when the fragment starts
     }
 
@@ -92,6 +93,8 @@ class CounterViewFragment : Fragment() {
 
         //set the adapter to your RecyclerView
         recyclerView.adapter = counterAdapter
+
+        fetchCountersFromLocalDatabase()
 
         //initializing toaster
         toaster = Toaster(this)
@@ -213,6 +216,18 @@ class CounterViewFragment : Fragment() {
             val networkInfo = connectivityManager.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
+    }
+
+    private fun fetchCountersFromLocalDatabase() {
+        val dbHelper = CounterDatabaseHelper(context ?: return) // Pass the context of your activity/fragment
+        val userId = currentUser?.uid ?: return
+
+        // Fetch counters from SQLite
+        val counterList = dbHelper.getCountersByUserId(userId)
+
+        // Update your adapter or UI with the retrieved counter list
+        counterAdapter.updateData(counterList)
+        counterAdapter.notifyDataSetChanged()
     }
 
 
