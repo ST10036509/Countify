@@ -12,7 +12,7 @@ android {
         applicationId = "st10036509.countify"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+
 
 
     implementation("androidx.recyclerview:recyclerview:1.2.1")
@@ -86,6 +88,11 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
+
+    implementation("androidx.core:core-ktx:1.9.0")
+
 
     // testing
     testImplementation(libs.junit)

@@ -85,7 +85,7 @@ object FirestoreService {
     }
 
     // method to add a counter document to the "counters_tests" collection
-    fun addCounter(
+    fun addCounterOLD(
         counter: CounterModel,
         onComplete: (Boolean, String?) -> Unit
     ) {
@@ -96,7 +96,9 @@ object FirestoreService {
             "incrementValue" to counter.changeValue,
             "name" to counter.name,
             "repetition" to counter.repetition,
-            "userId" to counter.userId
+            "userId" to counter.userId,
+            "startValue" to counter.startValue,
+            "lastReset" to counter.lastReset
         )
 
         Log.i("Firestore Service:", "Counter Model Created")
@@ -111,6 +113,49 @@ object FirestoreService {
                 Log.i("Firestore Service:", "Counter Document Creation Process Failed - $error")
                 onComplete(false, error) // failed to add counter, return error message
             }
+        }
+    }
+
+    fun addCounter(
+        counter: CounterModel,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        // Set the `synced` value to true before saving to Firestore
+        counter.synced = true
+
+        // Add the counter to Firestore
+        db.collection("counters")
+            .add(counter)
+            .addOnSuccessListener { documentReference ->
+                // Retrieve the document ID and set it as the counterId in the counter model
+                val generatedId = documentReference.id
+                counter.counterId = generatedId
+
+                // Update the document with the counterId field
+                documentReference.update("counterId", generatedId)
+                    .addOnSuccessListener {
+                        // Call the callback with success
+                        callback(true, null)
+                    }
+                    .addOnFailureListener { e ->
+                        // Handle failure to update the counterId
+                        callback(false, e.message)
+                    }
+            }
+            .addOnFailureListener { e ->
+                // Handle failure to add the counter
+                callback(false, e.message)
+            }
+    }
+
+
+    fun updateCounter(counter: CounterModel, callback: (Boolean, String?) -> Unit) {
+        counter.counterId?.let {
+            FirebaseFirestore.getInstance().collection("counters")
+                .document(it)
+                .set(counter)
+                .addOnSuccessListener { callback(true, null) }
+                .addOnFailureListener { e -> callback(false, e.message) }
         }
     }
 }

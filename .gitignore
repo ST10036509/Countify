@@ -8,6 +8,12 @@ local.properties
 # Log/OS Files
 *.log
 
+# Ignore release directory
+/release/
+
+# Ignore app bundle
+*.aab
+
 # Android Studio generated files and folders
 captures/
 .externalNativeBuild/

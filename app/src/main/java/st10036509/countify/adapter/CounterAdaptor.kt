@@ -1,6 +1,5 @@
 package st10036509.countify.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CounterAdapter(private val counterList: List<CounterModel>, private val fragment: Fragment) :
+class CounterAdapter(private val counterList: MutableList<CounterModel>, private val fragment: Fragment) :
     RecyclerView.Adapter<CounterAdapter.CounterViewHolder>() {
 
         private var toaster: Toaster
@@ -37,6 +36,13 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
         return CounterViewHolder(itemView)
     }
 
+    fun updateData(newCounterList: List<CounterModel>) {
+        //counterList.clear()                // Clear the existing data
+        counterList.addAll(newCounterList) // Add all items from the new data
+        notifyDataSetChanged()             // Notify the adapter that data has changed
+    }
+
+
     override fun onBindViewHolder(holder: CounterViewHolder, position: Int) {
         val currentCounter = counterList[position]
         val formattedDate = formatTimestampToDate(currentCounter.createdTimestamp)
@@ -53,7 +59,10 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             currentCounter.count = updatedValue  // update the local object
             holder.tvCounter.text = updatedValue.toString()  // Update UI with new value
 
-            // save the updated value to Firestore
+            //notify the adapter of the item change
+            notifyItemChanged(position)
+
+            //save the updated value to Firestore
             saveUpdatedCounterValueToFirestore(currentCounter)
         }
 
@@ -65,6 +74,9 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             if (updatedValue > 0){
                 currentCounter.count = updatedValue
                 holder.tvCounter.text = updatedValue.toString()
+
+                //notify the adapter of the item change
+                notifyItemChanged(position)
 
                 // save updated value to firestore
                 saveUpdatedCounterValueToFirestore(currentCounter)
@@ -79,7 +91,6 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             }
         }
     }
-
 
     private fun saveUpdatedCounterValueToFirestore(counter: CounterModel) {
         val counterDocumentRef = counter.counterId?.let {
@@ -96,7 +107,6 @@ class CounterAdapter(private val counterList: List<CounterModel>, private val fr
             toaster.showToast(fragment.getString((R.string.counter_update_failed)))
         }
     }
-
 
     fun formatTimestampToDate(timestampInMillis: Long): String {
         val date = Date(timestampInMillis) //convert timestamp to date

@@ -24,6 +24,7 @@ import st10036509.countify.service.AdviceApiService
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
+import st10036509.countify.utils.ProgressDialogFragment
 import java.util.Locale
 
 class SettingsFragment : Fragment() {
@@ -36,14 +37,14 @@ class SettingsFragment : Fragment() {
     private lateinit var deleteButton: CardView
 
     private lateinit var notiSwitch: Switch
-    private lateinit var themeSwitch: Switch
+    //private lateinit var themeSwitch: Switch
     private lateinit var langSwitch: Switch
 
     private lateinit var nameDisplay: TextView
     private lateinit var surnameDisplay: TextView
     private lateinit var emailDisplay: TextView
     private lateinit var notiText: TextView
-    private lateinit var themeText: TextView
+    //private lateinit var themeText: TextView
     private lateinit var langText: TextView
 
     // Firebase and user data
@@ -64,7 +65,7 @@ class SettingsFragment : Fragment() {
         emailDisplay = view.findViewById(R.id.email_input_txt)
 
         val notiDisplay = view.findViewById<Switch>(R.id.switch_notifications)
-        val themeDisplay = view.findViewById<Switch>(R.id.switch_theme)
+        //val themeDisplay = view.findViewById<Switch>(R.id.switch_theme)
         val langDisplay = view.findViewById<Switch>(R.id.switch_language)
 
         toaster = Toaster(this)
@@ -79,7 +80,7 @@ class SettingsFragment : Fragment() {
             val email = UserManager.currentUser?.email ?: "N/A"
 
             val notiOption = UserManager.currentUser?.notificationsEnabled ?: false
-            val themeOption = UserManager.currentUser?.darkModeEnabled ?: false
+            //val themeOption = UserManager.currentUser?.darkModeEnabled ?: false
             val langOption = UserManager.currentUser?.language ?: "en"
 
             // Set user data to views
@@ -88,7 +89,7 @@ class SettingsFragment : Fragment() {
             emailDisplay.text = email
 
             notiDisplay?.isChecked = notiOption
-            themeDisplay?.isChecked = themeOption
+            //themeDisplay?.isChecked = themeOption
             langDisplay?.isChecked = langOption == 0
 
             Log.d(TAG, "onCreateView: User data populated")
@@ -116,7 +117,7 @@ class SettingsFragment : Fragment() {
 
         // Bind views
         notiText = view.findViewById(R.id.noti_txt)
-        themeText = view.findViewById(R.id.theme_text)
+        //themeText = view.findViewById(R.id.theme_text)
         langText = view.findViewById(R.id.lang_text)
 
         backButton = view.findViewById(R.id.iv_backBtn)
@@ -134,8 +135,7 @@ class SettingsFragment : Fragment() {
         deleteButton = view.findViewById(R.id.btn_delete_account)
         deleteButton.setOnClickListener {
             Log.d(TAG, "Delete button clicked, showing confirmation dialog")
-            //showDeleteConfirmation()
-            toaster.showToast("Account Deletion Coming Soon!")
+            showDeleteConfirmation()
         }
 
         // Firestore and Firebase Auth setup
@@ -158,11 +158,11 @@ class SettingsFragment : Fragment() {
         }
 
         // Theme switch
-        themeSwitch = view?.findViewById(R.id.switch_theme)!!
+        /*(themeSwitch = view?.findViewById(R.id.switch_theme)!!
         themeSwitch.setOnClickListener {
             Log.d(TAG, "Theme switch toggled")
             handleThemeSwitch(db, userId)
-        }
+        }*/
 
         // Language switch
         langSwitch = view?.findViewById(R.id.switch_language)!!
@@ -184,7 +184,8 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun handleThemeSwitch(db: FirebaseFirestore, userId: String?) {
+
+    /*private fun handleThemeSwitch(db: FirebaseFirestore, userId: String?) {
         val isChecked = themeSwitch.isChecked
         toaster.showToast(if (isChecked) "Theme: Dark Mode Coming Soon..." else "Theme: Light On.")
         themeText.text = if (isChecked) getString(R.string.theme_dark_lbl) else getString(R.string.theme_light_lbl)
@@ -194,7 +195,7 @@ class SettingsFragment : Fragment() {
             db.collection("users").document(id).update("darkModeEnabled", isChecked)
             Log.d(TAG, "Theme setting updated to ${if (isChecked) "Dark Mode" else "Light Mode"} in Firestore")
         }
-    }
+    }*/
 
     private fun handleLanguageSwitch(db: FirebaseFirestore, userId: String?) {
         val isChecked = langSwitch.isChecked
@@ -218,9 +219,18 @@ class SettingsFragment : Fragment() {
             .setTitle("Logout")
             .setMessage("Are you sure you want to log out?")
             .setPositiveButton("Yes") { _, _ ->
+                //show the loading dialog
+                val progressDialog = ProgressDialogFragment()
+                activity?.let { progressDialog.show(it.supportFragmentManager, "LoadingDialog")}
+
                 FirebaseAuthService.logout()
+
                 NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
+
                 Log.d(TAG, "User logged out and navigated to LoginFragment")
+
+                //dismiss the loading dialog
+                progressDialog.dismiss()
             }
             .setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
@@ -234,8 +244,16 @@ class SettingsFragment : Fragment() {
             .setTitle("Delete")
             .setMessage("Are you sure you want to delete your account?")
             .setPositiveButton("Yes") { _, _ ->
-                NavigationService.navigateToFragment(LoginFragment(), R.id.fragment_container)
-                Log.d(TAG, "Account deletion confirmed, navigating to LoginFragment")
+                //show the loading dialog
+                val progressDialog = ProgressDialogFragment()
+                activity?.let { progressDialog.show(it.supportFragmentManager, "LoadingDialog")}
+
+                FirebaseAuthService.deleteUserAccount(requireActivity())
+
+                Log.d(TAG, "Account deletion confirmed")
+
+                //dismiss the loading dialog
+                progressDialog.dismiss()
             }
             .setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()

@@ -1,8 +1,12 @@
 package st10036509.countify.user_interface.counter
 
-import android.app.Activity
-import android.content.Intent
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
+import android.system.Os
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +18,18 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import st10036509.countify.R
 import st10036509.countify.model.CounterModel
+import st10036509.countify.service.CounterDatabaseHelper
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
+import st10036509.countify.user_interface.counter.CounterViewFragment
 import st10036509.countify.user_interface.account.SettingsFragment
 import st10036509.countify.utils.isMoreThanOne
 import st10036509.countify.utils.isMoreThanZero
@@ -48,15 +54,13 @@ class CounterCreationFragment : Fragment() {
     private var start: Int = 0
     private var timeStamp: Long = 0
 
-    // ActivityResultLauncher for Google Sign-In
-    private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_counter_creation, container, false)
         toaster = Toaster(this)
+
 
         // Initialize input fields
         titleInput = view.findViewById(R.id.title_input)
@@ -177,28 +181,61 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
+        val currentTime = getCurrentTimestamp()
+
         // Create the CounterModel instance
         val counter = CounterModel(
+            counterId = "",
             userId = userId,
             name = title,
+            startValue = start,
             count = start,
             changeValue = increment,
             repetition = repeat,
-            createdTimestamp = getCurrentTimestamp() // Set the timestamp here
+            createdTimestamp = currentTime,
+            lastReset = currentTime,
+            synced = false  // Initially set as unsynced
         )
 
-        // Call FirestoreService using the counter model directly
-        FirestoreService.addCounter(counter) { success, error ->
-            if (success) {
-                Toast.makeText(requireContext(), "Counter added successfully!", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter added to databse")
-            } else {
-                Toast.makeText(requireContext(), "Error adding counter: $error", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter failed to add to databases")
-            }
+        // Save counter locally in SQLite
+        val dbHelper = CounterDatabaseHelper(context ?: return)
+        dbHelper.insertCounter(counter)
+
+        // Check if connected before attempting to sync and displaying success
+        if (isConnected(context ?: return)) {
+            // Retrieve the CounterViewFragment by tag
+            val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
+
+            // Sync counters if the fragment is available
+            counterViewFragment?.syncUnsyncedCounters()
+
+            // Display success toast and navigate
+            toaster.showToast("Counter creation successful")
+            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
+        } else {
+            // Display a connection error message if there's no connection
+            Toast.makeText(context ?: return, "Refresh the app with an internet connection to view the counter.", Toast.LENGTH_SHORT).show()
+            NavigationService.navigateToFragment(CounterViewFragment(), R.id.fragment_container)
         }
     }
 
+    fun isConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+    }
 
 }
