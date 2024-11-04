@@ -1,6 +1,5 @@
 package st10036509.countify.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,16 +36,23 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
         return CounterViewHolder(itemView)
     }
 
+    fun updateData(newCounterList: List<CounterModel>) {
+        //counterList.clear()                // Clear the existing data
+        counterList.addAll(newCounterList) // Add all items from the new data
+        notifyDataSetChanged()             // Notify the adapter that data has changed
+    }
+
+
     override fun onBindViewHolder(holder: CounterViewHolder, position: Int) {
         val currentCounter = counterList[position]
         val formattedDate = formatTimestampToDate(currentCounter.createdTimestamp)
 
-        //set UI values
+        // Set UI values
         holder.tvItemName.text = currentCounter.name.trim()
         holder.tvCounter.text = currentCounter.count.toString().trim()
         holder.tvDate.text = formattedDate.trim()
 
-        //increment counter
+        // Increment counter
         holder.ivPlusButton.setOnClickListener {
             // increment the current counter value by its increment value
             val updatedValue = currentCounter.count + currentCounter.changeValue
@@ -60,7 +66,7 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
             saveUpdatedCounterValueToFirestore(currentCounter)
         }
 
-        //decrement counter
+        // Decrement counter
         holder.ivMinusButton.setOnClickListener {
             // Decrement the current counter value by its decrement value
             val updatedValue = currentCounter.count - currentCounter.changeValue
@@ -86,7 +92,6 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
         }
     }
 
-
     private fun saveUpdatedCounterValueToFirestore(counter: CounterModel) {
         val counterDocumentRef = counter.counterId?.let {
             FirebaseFirestore.getInstance()
@@ -102,7 +107,6 @@ class CounterAdapter(private val counterList: MutableList<CounterModel>, private
             toaster.showToast(fragment.getString((R.string.counter_update_failed)))
         }
     }
-
 
     fun formatTimestampToDate(timestampInMillis: Long): String {
         val date = Date(timestampInMillis) //convert timestamp to date

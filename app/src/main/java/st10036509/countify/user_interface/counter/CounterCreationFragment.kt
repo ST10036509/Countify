@@ -1,6 +1,12 @@
 package st10036509.countify.user_interface.counter
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
+import android.system.Os
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +19,25 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import st10036509.countify.R
 import st10036509.countify.model.CounterModel
+import st10036509.countify.service.CounterDatabaseHelper
 import st10036509.countify.service.FirebaseAuthService
 import st10036509.countify.service.FirestoreService
 import st10036509.countify.service.NavigationService
 import st10036509.countify.service.Toaster
+import st10036509.countify.user_interface.counter.CounterViewFragment
 import st10036509.countify.user_interface.account.SettingsFragment
 import st10036509.countify.utils.isMoreThanOne
 import st10036509.countify.utils.isMoreThanZero
 import st10036509.countify.utils.isTitleNull
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class CounterCreationFragment : Fragment() {
 
@@ -47,6 +60,7 @@ class CounterCreationFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_counter_creation, container, false)
         toaster = Toaster(this)
+
 
         // Initialize input fields
         titleInput = view.findViewById(R.id.title_input)
@@ -167,10 +181,12 @@ class CounterCreationFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid ?: return
 
+
         val currentTime = getCurrentTimestamp()
 
         // Create the CounterModel instance
         val counter = CounterModel(
+            counterId = "",
             userId = userId,
             name = title,
             startValue = start,
@@ -178,18 +194,43 @@ class CounterCreationFragment : Fragment() {
             changeValue = increment,
             repetition = repeat,
             createdTimestamp = currentTime,
-            lastReset = currentTime
+            lastReset = currentTime,
+            synced = false  // Initially set as unsynced
         )
 
-        // Call FirestoreService using the counter model directly
-        FirestoreService.addCounter(counter) { success, error ->
-            if (success) {
-                Toast.makeText(requireContext(), "Counter added successfully!", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter added to database")
-            } else {
-                Toast.makeText(requireContext(), "Error adding counter: $error", Toast.LENGTH_SHORT).show()
-                Log.i("addCounterToDatabase","Counter failed to add to databases")
-            }
+        // Save counter locally in SQLite
+        val dbHelper = CounterDatabaseHelper(context ?: return)
+        dbHelper.insertCounter(counter)
+
+        // Try to sync with Firestore if connected
+        if (isConnected(context ?: return)) {
+            // Retrieve the CounterViewFragment by tag
+            val counterViewFragment = parentFragmentManager.findFragmentByTag("CounterViewFragmentTag") as? CounterViewFragment
+
+            // Call the sync method if the fragment is found
+            counterViewFragment?.syncUnsyncedCounters()
+        } else {
+            Toast.makeText(context ?: return, "Check your internet connection and try again.", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun isConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+    }
+
 }
